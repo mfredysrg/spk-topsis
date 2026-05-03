@@ -1,4 +1,4 @@
-# SPK-Topsis-Husnul
+# SPK-UMKM
 Sistem Pendukung Keputusan Menggunakan Topsis Berbasis Web
 Sistem Pendukung Keputusan (SPK) adalah aplikasi berbasis web yang membantu dalam pengambilan keputusan berdasarkan berbagai kriteria dan metode perhitungan. Aplikasi ini dikembangkan menggunakan PHP, MySQL, jQuery, dan Bootstrap untuk memberikan pengalaman pengguna yang responsif dan mudah digunakan
 # Fitur
