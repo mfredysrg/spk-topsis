@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="credits">
                                     <small>
-                                        Designed by <a href="Javascript:void(0);">Hudzaifa</a>
+                                        Designed by <a href="Javascript:void(0);">M. Fredyansyah Siregar</a>
                                     </small>
                                 </div>
                             </div>

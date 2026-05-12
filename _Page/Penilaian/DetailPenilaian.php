@@ -29,8 +29,8 @@
         $status= $DataPeriodePenilaian['status'];
         //Jumlah Kriteria
         $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-        //Jumlah Karyawan
-        $JumlahKaryawan = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+        // [REVISI] Jumlah UMKM (Mengganti Karyawan)
+        $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
 ?>
     <div class="card">
         <div class="card-header">
@@ -67,8 +67,8 @@
                         <div class="col-md-7"><?php echo "$JumlahKriteria Data"; ?></div>
                     </div>
                     <div class="row mt-2"> 
-                        <div class="col-md-5"><dt>Karyawan Dinilai</dt></div>
-                        <div class="col-md-7"><?php echo "$JumlahKaryawan Data"; ?></div>
+                        <div class="col-md-5"><dt>Peserta UMKM Dinilai</dt></div>
+                        <div class="col-md-7"><?php echo "$JumlahUMKM Data"; ?></div>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                                         <b>No</b>
                                     </th>
                                     <th class="text-center">
-                                        <b>Nama</b>
+                                        <b>Nama UMKM</b>
                                     </th>
                                     <?php
                                         if($status=="Proses"){
@@ -134,17 +134,19 @@
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
                                     if($status=="Proses"){
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                        // [REVISI] Memanggil dari tabel umkm
+                                        $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_umkm ASC");
                                     }else{
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                        // [REVISI] Memanggil id_umkm dari tabel nilai
+                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai ORDER BY id_umkm ASC");
                                     }
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
-                                        //Buka detail karyawan
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_umkm= $DataUMKM['id_umkm'];
+                                        //Buka detail UMKM
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
-                                        $nama = $DataDetailAkses['nama'];
-                                        $jabatan = $DataDetailAkses['jabatan'];
+                                        $nama_umkm = $DataDetailAkses['nama_umkm'];
+                                        $nama_pemilik = $DataDetailAkses['nama_pemilik'];
                                 ?>
                                     <tr>
                                         <td class="text-center text-xs">
@@ -152,8 +154,8 @@
                                         </td>
                                         <td class="text-left" align="left">
                                             <?php 
-                                                echo "<b>$nama</b><br>";
-                                                echo "<small>$jabatan</small>";
+                                                echo "<b>$nama_umkm</b><br>";
+                                                echo "<small>Pemilik: $nama_pemilik</small>";
                                             ?>
                                         </td>
                                         <?php
@@ -165,8 +167,8 @@
                                             }
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
-                                                //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                //Buka nilai (berdasarkan id_umkm)
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_umkm='$id_umkm' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -178,7 +180,7 @@
                                         ?>
                                         <td align="center">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalEditNilai" data-id="<?php echo "$id_periode_penilaian,$id_karyawan"; ?>">
+                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalEditNilai" data-id="<?php echo "$id_periode_penilaian,$id_umkm"; ?>">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>  
                                             </div>

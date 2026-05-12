@@ -1,29 +1,32 @@
 $('#MenampilkanTabelPenilaian').html("Loading...");
 $('#MenampilkanTabelPenilaian').load("_Page/Penilaian/TabelPenilaian.php");
+
 $('#batas').change(function(){
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelPenilaian').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/TabelPenilaian.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/Penilaian/TabelPenilaian.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelPenilaian').html(data);
         }
     });
 });
+
 $('#ProsesBatas').submit(function(){
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelPenilaian').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/TabelPenilaian.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/Penilaian/TabelPenilaian.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelPenilaian').html(data);
         }
     });
 });
+
 $('#ProsesFilterPenilaian').submit(function(){
     var batas = $('#FilterBatas').val();
     var OrderBy = $('#OrderBy').val();
@@ -32,21 +35,22 @@ $('#ProsesFilterPenilaian').submit(function(){
     var FilterKeyword = $('#FilterKeyword').val();
     $('#MenampilkanTabelPenilaian').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/TabelPenilaian.php',
-        data 	    :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
+        type        : 'POST',
+        url         : '_Page/Penilaian/TabelPenilaian.php',
+        data        :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
         success     : function(data){
             $('#MenampilkanTabelPenilaian').html(data);
             $('#ModalFilterPenilaian').modal('hide');
         }
     });
 });
+
 //Tambah Penilaian
 $('#ModalTambahPenilaian').on('show.bs.modal', function (e) {
     $('#FormTambahPenilaian').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormTambahPenilaian.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormTambahPenilaian.php',
         success     : function(data){
             $('#FormTambahPenilaian').html(data);
             //Proses Tambah Penilaian
@@ -55,9 +59,9 @@ $('#ModalTambahPenilaian').on('show.bs.modal', function (e) {
                 var form = $('#ProsesTambahPenilaian')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/ProsesTambahPenilaian.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/Penilaian/ProsesTambahPenilaian.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -74,6 +78,7 @@ $('#ModalTambahPenilaian').on('show.bs.modal', function (e) {
         }
     });
 });
+
 //Edit Penilaian
 $('#ModalEditPenilaian').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
@@ -88,8 +93,8 @@ $('#ModalEditPenilaian').on('show.bs.modal', function (e) {
     var keyword_by = pecah[7];
     $('#FormEditPenilaian').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormEditPenilaian.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormEditPenilaian.php',
         data        : {id_periode_penilaian: id_periode_penilaian},
         success     : function(data){
             $('#FormEditPenilaian').html(data);
@@ -99,9 +104,9 @@ $('#ModalEditPenilaian').on('show.bs.modal', function (e) {
                 var form = $('#ProsesEditPenilaian')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/ProsesEditPenilaian.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/Penilaian/ProsesEditPenilaian.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -112,9 +117,9 @@ $('#ModalEditPenilaian').on('show.bs.modal', function (e) {
                         if(NotifikasiEditPenilaianBerhasil=="Success"){
                             $('#MenampilkanTabelPenilaian').html("Loading...");
                             $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Penilaian/TabelPenilaian.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
+                                type        : 'POST',
+                                url         : '_Page/Penilaian/TabelPenilaian.php',
+                                data        :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
                                 success     : function(data){
                                     $('#MenampilkanTabelPenilaian').html(data);
                                     $('#ModalEditPenilaian').modal('hide');
@@ -128,6 +133,7 @@ $('#ModalEditPenilaian').on('show.bs.modal', function (e) {
         }
     });
 });
+
 //Hapus Penilaian
 $('#ModalDeletePenilaian').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
@@ -142,8 +148,8 @@ $('#ModalDeletePenilaian').on('show.bs.modal', function (e) {
     var keyword_by = pecah[7];
     $('#FormDeletePenilaian').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormDeletePenilaian.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormDeletePenilaian.php',
         data        : {id_periode_penilaian: id_periode_penilaian},
         success     : function(data){
             $('#FormDeletePenilaian').html(data);
@@ -151,17 +157,17 @@ $('#ModalDeletePenilaian').on('show.bs.modal', function (e) {
             $('#KonfirmasiHapusPenilaian').click(function(){
                 $('#NotifikasiHapusPenilaian').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/ProsesHapusPenilaian.php',
+                    type        : 'POST',
+                    url         : '_Page/Penilaian/ProsesHapusPenilaian.php',
                     data        : {id_periode_penilaian: id_periode_penilaian},
                     success     : function(data){
                         $('#NotifikasiHapusPenilaian').html(data);
                         var NotifikasiHapusPenilaianBerhasil=$('#NotifikasiHapusPenilaianBerhasil').html();
                         if(NotifikasiHapusPenilaianBerhasil=="Success"){
                             $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Penilaian/TabelPenilaian.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
+                                type        : 'POST',
+                                url         : '_Page/Penilaian/TabelPenilaian.php',
+                                data        :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
                                 success     : function(data){
                                     $('#MenampilkanTabelPenilaian').html(data);
                                     $('#ModalDeletePenilaian').modal('hide');
@@ -175,20 +181,22 @@ $('#ModalDeletePenilaian').on('show.bs.modal', function (e) {
         }
     });
 });
+
 //Detail Penilaian
 $('#ModalDetailPenilaian').on('show.bs.modal', function (e) {
     var id_periode_penilaian = $(e.relatedTarget).data('id');
     $('#FormDetailPenilaian').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormDetailPenilaian.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormDetailPenilaian.php',
         data        : {id_periode_penilaian: id_periode_penilaian},
         success     : function(data){
             $('#FormDetailPenilaian').html(data);
         }
     });
 });
-//Hapus Penilaian
+
+//Edit Nilai
 $('#ModalEditNilai').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
@@ -196,8 +204,8 @@ $('#ModalEditNilai').on('show.bs.modal', function (e) {
     var id_karyawan = pecah[1];
     $('#FormEditNilai').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormEditNilai.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormEditNilai.php',
         data        : {id_periode_penilaian: id_periode_penilaian, id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormEditNilai').html(data);
@@ -206,9 +214,9 @@ $('#ModalEditNilai').on('show.bs.modal', function (e) {
                 var form = $('#ProsesEditNilai')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/ProsesEditNilai.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/Penilaian/ProsesEditNilai.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -225,13 +233,14 @@ $('#ModalEditNilai').on('show.bs.modal', function (e) {
         }
     });
 });
-//Edit Penilaian
+
+//Update Status Penilaian
 $('#ModalUpdateStatusPenilaian').on('show.bs.modal', function (e) {
     var id_periode_penilaian = $(e.relatedTarget).data('id');
     $('#FormUpdateStatusPenilaian').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormEditPenilaian.php',
+        type        : 'POST',
+        url         : '_Page/Penilaian/FormEditPenilaian.php',
         data        : {id_periode_penilaian: id_periode_penilaian},
         success     : function(data){
             $('#FormUpdateStatusPenilaian').html(data);
@@ -241,9 +250,9 @@ $('#ModalUpdateStatusPenilaian').on('show.bs.modal', function (e) {
                 var form = $('#ProsesEditSesiPenilaian')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/ProsesEditPenilaian.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/Penilaian/ProsesEditPenilaian.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -260,29 +269,65 @@ $('#ModalUpdateStatusPenilaian').on('show.bs.modal', function (e) {
         }
     });
 });
-//Modal Hitung Penilaian
+
+// =========================================================================
+// INI ADALAH BAGIAN YANG DIREVISI: Modal Hitung Penilaian (Integrasi MCDM)
+// =========================================================================
+
+// Event saat Modal Hitung muncul, kita simpan ID periode-nya
 $('#ModalHitungPenilaian').on('show.bs.modal', function (e) {
     var id_periode_penilaian = $(e.relatedTarget).data('id');
-    $('#FormHitungPenilaian').html("Loading...");
+    
+    // Simpan ID ke dalam form agar bisa diambil saat tombol submit ditekan
+    $('#FormHitungPenilaian').data('id', id_periode_penilaian);
+    
+    // Kosongkan notifikasi sebelumnya jika ada
+    $('#NotifikasiHitungPenilaian').html('');
+});
+
+// Proses saat Form Hitung di-submit
+$('#FormHitungPenilaian').submit(function(e){
+    e.preventDefault();
+    
+    // Ambil ID periode yang sudah disimpan sebelumnya
+    var id_periode_penilaian = $(this).data('id');
+    
+    // Ambil semua data form termasuk pilihan "metode_pembobotan"
+    var form = $(this)[0];
+    var formData = new FormData(form);
+    
+    // Tambahkan id_periode_penilaian ke dalam payload request
+    formData.append('id_periode_penilaian', id_periode_penilaian);
+    
+    // Munculkan indikator loading di container hasil perhitungan
+    $('#HasilPerhitungan').html('<div class="text-center my-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Sedang memproses perhitungan sistem Hybrid MCDM...</p></div>');
+    
+    // Ubah status tombol menjadi loading agar tidak diklik dua kali
+    $('#BtnHitung').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menghitung...');
+    $('#BtnHitung').prop('disabled', true);
+    
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Penilaian/FormHitungPenilaian.php',
-        data        : {id_periode_penilaian: id_periode_penilaian},
-        success     : function(data){
-            $('#FormHitungPenilaian').html(data);
-            //Konfirmasi Hapus Penilaian
-            $('#KonfirmasiHitungPenilaian').click(function(){
-                $('#HasilPerhitungan').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
-                $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Penilaian/HasilPerhitungan.php',
-                    data        : {id_periode_penilaian: id_periode_penilaian},
-                    success     : function(data){
-                        $('#HasilPerhitungan').html(data);
-                        $('#ModalHitungPenilaian').modal('hide');
-                    }
-                });
-            });
+        type        : 'POST',
+        url         : '_Page/Penilaian/HasilPerhitungan.php',
+        data        : formData,
+        cache       : false,
+        processData : false,
+        contentType : false,
+        success     : function(response){
+            // Tampilkan hasil tabel perhitungan
+            $('#HasilPerhitungan').html(response);
+            
+            // Tutup modal
+            $('#ModalHitungPenilaian').modal('hide');
+            
+            // Kembalikan tombol ke keadaan semula
+            $('#BtnHitung').html('<i class="bi bi-check"></i> Ya, Hitung');
+            $('#BtnHitung').prop('disabled', false);
+        },
+        error       : function(){
+            $('#NotifikasiHitungPenilaian').html('<div class="alert alert-danger mt-3">Terjadi kesalahan saat terhubung ke server/database!</div>');
+            $('#BtnHitung').html('<i class="bi bi-check"></i> Ya, Hitung');
+            $('#BtnHitung').prop('disabled', false);
         }
     });
 });

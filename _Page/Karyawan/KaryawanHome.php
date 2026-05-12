@@ -3,8 +3,8 @@
         <div class="col-lg-12">
             <div class="alert alert-info alert-dismissible fade show" role="alert"> 
                 <small>
-                    Halaman karyawan ini berfungsi untuk mengelola data karyawan khusus oleh HRD.
-                    Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan data karyawan. 
+                    Halaman ini berfungsi untuk mengelola data penilaian Bantuan Sosial UMKM.
+                    Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan data penilaian UMKM. 
                 </small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

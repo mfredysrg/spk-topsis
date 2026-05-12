@@ -67,6 +67,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalTambahPenilaian" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -90,6 +91,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalEditPenilaian" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -113,6 +115,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalDeletePenilaian" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -134,6 +137,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalDetailPenilaian" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -147,6 +151,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalEditNilai" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -170,6 +175,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalUpdateStatusPenilaian" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -193,24 +199,37 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalHitungPenilaian" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Hitung Penilaian</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="FormHitungPenilaian">
-                
-            </div>
-            <div class="modal-footer bg-primary">
-                <button type="button" class="btn btn-success btn-rounded" id="KonfirmasiHitungPenilaian">
-                    <i class="bi bi-check"></i> Ya, Hitung
-                </button>
-                <button type="button" class="btn btn-dark btn-rounded" data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle"></i> Tidak
-                </button>
-            </div>
+    <div class="modal-dialog modal-md"> <div class="modal-content">
+            <form action="javascript:void(0);" id="FormHitungPenilaian">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-light"><i class="bi bi-calculator"></i> Hitung Penilaian</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="form-group mb-3">
+                        <label for="metode_pembobotan"><b>Metode Pembobotan Kriteria:</b></label>
+                        <select name="metode_pembobotan" id="metode_pembobotan" class="form-control" required>
+                            <option value="">-- Pilih Metode --</option>
+                            <option value="ANP">Analytic Network Process (ANP)</option>
+                            <option value="SWARA">Step-wise Weight Assessment Ratio Analysis (SWARA)</option>
+                        </select>
+                        <small class="text-muted mt-1 d-block">Pilih bobot kriteria yang akan diintegrasikan dengan perhitungan akhir <b>TOPSIS</b>.</small>
+                    </div>
+
+                    <div id="NotifikasiHitungPenilaian"></div>
+
+                </div>
+                <div class="modal-footer bg-primary">
+                    <button type="submit" class="btn btn-success btn-rounded" id="BtnHitung">
+                        <i class="bi bi-check"></i> Ya, Hitung
+                    </button>
+                    <button type="button" class="btn btn-dark btn-rounded" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Tidak
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

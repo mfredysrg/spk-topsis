@@ -1,8 +1,15 @@
 <?php
     //Koneksi
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     include "../../_Config/Connection.php";
     include "../../_Config/SettingGeneral.php";
     include '../../vendor/autoload.php';
+    
+    // [REVISI] Mengambil metode pembobotan yang terakhir kali digunakan dari Session
+    $metode_pembobotan = isset($_SESSION['metode_terakhir']) ? $_SESSION['metode_terakhir'] : 'ANP';
+
     //Tangkap id_akses
     if(empty($_POST['id_periode_penilaian'])){
         echo ' Periode Penilaian Tidak Boleh Kosong';
@@ -93,8 +100,12 @@
                 <tr>
                     <td align="center">
                         <?php
-                            echo '<h3><b>'.$title_page.'</b></h3><br>';
-                            echo '<i>'.$alamat_bisnis.'</i>';
+                            echo '<h3><b>'.$title_page.'</b></h3>';
+                            
+                            // [REVISI] Menampilkan Keterangan Metode di Laporan
+                            echo '<h4>Metode Pembobotan: <b>'.$metode_pembobotan.'</b> | Metode Perankingan: <b>TOPSIS</b></h4><br>';
+                            
+                            echo '<i>'.$alamat_bisnis.'</i><br>';
                             echo '<i>Telepon '.$telepon_bisnis.'</i>';
                         ?>
                     </td>
@@ -128,7 +139,10 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 $kode_kriteria= $data['kode_kriteria'];
                                                 $kriteria= $data['kriteria'];
-                                                $bobot= $data['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $data['bobot_anp'] : $data['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }else{
@@ -142,7 +156,10 @@
                                                 $kode_kriteria= $DataKriteria['kode_kriteria'];
                                                 $kriteria = $DataKriteria['kriteria'];
                                                 $atribut= $DataKriteria['atribut'];
-                                                $bobot= $DataKriteria['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $DataKriteria['bobot_anp'] : $DataKriteria['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }
@@ -389,7 +406,10 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 $kode_kriteria= $data['kode_kriteria'];
                                                 $kriteria= $data['kriteria'];
-                                                $bobot= $data['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $data['bobot_anp'] : $data['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }else{
@@ -403,7 +423,10 @@
                                                 $kode_kriteria= $DataKriteria['kode_kriteria'];
                                                 $kriteria = $DataKriteria['kriteria'];
                                                 $atribut= $DataKriteria['atribut'];
-                                                $bobot= $DataKriteria['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $DataKriteria['bobot_anp'] : $DataKriteria['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }
@@ -451,7 +474,10 @@
                                                 //Buka detail kriteria
                                                 $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataKriteria = mysqli_fetch_array($QryKriteria);
-                                                $bobot= $DataKriteria['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $DataKriteria['bobot_anp'] : $DataKriteria['bobot_swara'];
+                                                
                                                 //Buka nilai
                                                 $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
@@ -513,9 +539,6 @@
                                                         echo '<small class="text-danger">Error</small>';
                                                     }
                                                 }
-                                                // echo '<td align="right">';
-                                                // echo ''.$PembulatanNormalisasiTerbobot.'<br>';
-                                                // echo '</td>';
                                             }
                                         ?>
                                     </tr>
@@ -551,7 +574,10 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 $kode_kriteria= $data['kode_kriteria'];
                                                 $kriteria= $data['kriteria'];
-                                                $bobot= $data['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $data['bobot_anp'] : $data['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }else{
@@ -565,7 +591,10 @@
                                                 $kode_kriteria= $DataKriteria['kode_kriteria'];
                                                 $kriteria = $DataKriteria['kriteria'];
                                                 $atribut= $DataKriteria['atribut'];
-                                                $bobot= $DataKriteria['bobot'];
+                                                
+                                                // [REVISI] Ambil bobot berdasarkan metode
+                                                $bobot = ($metode_pembobotan == 'ANP') ? $DataKriteria['bobot_anp'] : $DataKriteria['bobot_swara'];
+                                                
                                                 echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
                                             }
                                         }
@@ -592,8 +621,8 @@
                                             $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                             $DataKriteria = mysqli_fetch_array($QryKriteria);
                                             $atribut= $DataKriteria['atribut'];
-                                            $bobot= $DataKriteria['bobot'];
-                                            //Menentukan min atau max melalui Benefit atau Cost
+                                            
+                                            // Menentukan min atau max melalui Benefit atau Cost
                                             if($atribut=="Benefit"){
                                                 //Cari nilai maks
                                                 $QryMaks=mysqli_query($Conn, "SELECT max(normalisasi_terbobot) as normalisasi_terbobot FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
@@ -668,7 +697,7 @@
                                             $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                             $DataKriteria = mysqli_fetch_array($QryKriteria);
                                             $atribut= $DataKriteria['atribut'];
-                                            $bobot= $DataKriteria['bobot'];
+                                            
                                             //Menentukan min atau max melalui Benefit atau Cost
                                             if($atribut=="Cost"){
                                                 //Cari nilai maks
@@ -721,6 +750,7 @@
                                                     echo '<td align="right" class="text-danger">Error</td>';
                                                 }
                                             }
+                                            
                                         }
                                     ?>
                                 </tr>
@@ -797,10 +827,7 @@
                                             }
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
-                                                //Buka detail kriteria
-                                                $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
-                                                $DataKriteria = mysqli_fetch_array($QryKriteria);
-                                                $bobot= $DataKriteria['bobot'];
+                                                
                                                 //Buka nilai normalisasai_terbobot
                                                 $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
@@ -835,16 +862,13 @@
                                             }
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
-                                                //Buka detail kriteria
-                                                $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
-                                                $DataKriteria = mysqli_fetch_array($QryKriteria);
-                                                $bobot= $DataKriteria['bobot'];
+                                                
                                                 //Buka nilai normalisasai_terbobot
                                                 $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 $id_normalisasi_terbobot=$DataNormalisasiTerbobot['id_normalisasi_terbobot'];
                                                 $normalisasi_terbobot=$DataNormalisasiTerbobot['normalisasi_terbobot'];
-                                                //Buka solusi ideal positif
+                                                //Buka solusi ideal negatif
                                                 $QrySolusiIdeal = mysqli_query($Conn,"SELECT * FROM solusi_ideal WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND positif_negatif='Negatif'")or die(mysqli_error($Conn));
                                                 $DataSolusiIdeal = mysqli_fetch_array($QrySolusiIdeal);
                                                 if(empty($DataSolusiIdeal['solusi_ideal'])){

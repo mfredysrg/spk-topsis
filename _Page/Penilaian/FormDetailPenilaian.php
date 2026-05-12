@@ -3,6 +3,7 @@
     date_default_timezone_set('Asia/Jakarta');
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
+    
     //Tangkap id_periode_penilaian
     if(empty($_POST['id_periode_penilaian'])){
         echo '<div class="modal-body">';
@@ -23,6 +24,7 @@
         echo '</div>';
     }else{
         $id_periode_penilaian=$_POST['id_periode_penilaian'];
+        
         //Buka data periode penilaian
         $QryPeriodePenilaian = mysqli_query($Conn,"SELECT * FROM periode_penilaian WHERE id_periode_penilaian='$id_periode_penilaian'")or die(mysqli_error($Conn));
         $DataPeriodePenilaian = mysqli_fetch_array($QryPeriodePenilaian);
@@ -30,10 +32,12 @@
         $tanggal= $DataPeriodePenilaian['tanggal'];
         $keterangan= $DataPeriodePenilaian['keterangan'];
         $status= $DataPeriodePenilaian['status'];
+        
         //Jumlah Kriteria
         $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-        //Jumlah Karyawan
-        $JumlahKaryawan = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+        
+        // [REVISI] Menghitung Jumlah UMKM bukan Karyawan
+        $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
 ?>
 <div class="modal-body">
     <div class="row mt-2"> 
@@ -78,11 +82,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <small><dt>Karyawan</dt></small>
+                            <small><dt>Peserta UMKM</dt></small>
                         </td>
                         <td><b>:</b></td>
                         <td>
-                            <small><?php echo "$JumlahKaryawan"; ?></small>
+                            <small><?php echo "$JumlahUMKM Unit"; ?></small>
                         </td>
                     </tr>
                 </tbody>
