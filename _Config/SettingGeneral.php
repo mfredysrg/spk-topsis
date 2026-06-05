@@ -1,7 +1,7 @@
 <?php
     $title_page="Bantuan UMKM";
     $kata_kunci="Fredy, SDM, Topsis";
-    $deskripsi="Aplikasi Penilaian Kinerja Karyawan Menggunakan Algoritma Topsis";
+    $deskripsi="Aplikasi Penilaian Kinerja Umkm Menggunakan Algoritma Topsis";
     $alamat_bisnis="Lhokseumawe";
     $email_bisnis="mfredyansyahsiregar@gmail.com";
     $telepon_bisnis="081376255613";

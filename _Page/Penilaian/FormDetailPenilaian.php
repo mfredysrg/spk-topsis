@@ -36,7 +36,7 @@
         //Jumlah Kriteria
         $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
         
-        // [REVISI] Menghitung Jumlah UMKM bukan Karyawan
+        // [REVISI] Menghitung Jumlah UMKM bukan Umkm
         $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
 ?>
 <div class="modal-body">

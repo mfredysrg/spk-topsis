@@ -10,7 +10,7 @@
         echo '  <div class="card-body">';
         echo '      <div class="row">';
         echo '          <div class="col-md-12 mb-3 text-danger text-center">';
-        echo '              ID Karyawan Tidak Boleh Kosong';
+        echo '              ID Umkm Tidak Boleh Kosong';
         echo '          </div>';
         echo '      </div>';
         echo '  </div>';
@@ -20,8 +20,8 @@
         echo '</div>';
     }else{
         $id_karyawan=$_GET['id_karyawan'];
-        //Buka data karyawan
-        $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+        //Buka data umkm
+        $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
         $DataKaryawan = mysqli_fetch_array($QryDetailKaryawan);
         $id_akses= $DataKaryawan['id_akses'];
         $nama= $DataKaryawan['nama'];
@@ -38,11 +38,11 @@
             <div class="row">
                 <div class="col-md-10">
                     <b class="card-title">
-                        <i class="bi bi-info-circle"></i> Detail Karyawan
+                        <i class="bi bi-info-circle"></i> Detail Umkm
                     </b>
                 </div>
                 <div class="col-md-2">
-                    <a href="index.php?Page=Karyawan" class="btn btn-md btn-dark btn-rounded btn-block">
+                    <a href="index.php?Page=Umkm" class="btn btn-md btn-dark btn-rounded btn-block">
                         <i class="bi bi-arrow-left-short"></i> Kembali
                     </a>
                 </div>
@@ -56,7 +56,7 @@
                         <div class="col-md-7"><?php echo "$id_akses"; ?></div>
                     </div>
                     <div class="row mt-2"> 
-                        <div class="col-md-5"><dt>ID Karyawan</dt></div>
+                        <div class="col-md-5"><dt>ID Umkm</dt></div>
                         <div class="col-md-7"><?php echo "$id_karyawan"; ?></div>
                     </div>
                     <div class="row mt-2"> 

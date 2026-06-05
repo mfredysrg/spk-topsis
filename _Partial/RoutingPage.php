@@ -6,8 +6,9 @@
         if($Page=="Akses"){
             include "_Page/Akses/Akses.php";
         }else{
-            if($Page=="Karyawan"){
-                include "_Page/Karyawan/Karyawan.php";
+            // RUTE MENU UMKM
+            if($Page=="UMKM"){
+                include "_Page/UMKM/UMKM.php";
             }else{
                 if($Page=="Kriteria"){
                     include "_Page/Kriteria/Kriteria.php";
@@ -27,6 +28,7 @@
                                     if($Page=="Help"){
                                         include "_Page/Help/Help.php";
                                     }else{
+                                        // JIKA RUTE TIDAK DIKENALI, KEMBALI KE DASHBOARD
                                         include "_Page/Dashboard/Dashboard.php";
                                     }
                                 }

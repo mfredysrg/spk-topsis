@@ -18,12 +18,12 @@
             echo '  </ol>';
             echo '</nav>';
         }else{
-            if($_GET['Page']=="Karyawan"){
-                echo '<h1><i class="bi bi-person-badge"></i> Karyawan</h1>';
+            if($_GET['Page']=="UMKM"){
+                echo '<h1><i class="bi bi-person-badge"></i> UMKM</h1>';
                 echo '<nav>';
                 echo '  <ol class="breadcrumb">';
                 echo '      <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>';
-                echo '      <li class="breadcrumb-item active">Karyawan</li>';
+                echo '      <li class="breadcrumb-item active">UMKM</li>';
                 echo '  </ol>';
                 echo '</nav>';
             }else{
@@ -64,11 +64,11 @@
                                 echo '</nav>';
                             }else{
                                 if($_GET['Page']=="PenilaianKaryawan"){
-                                    echo '<h1><i class="bi bi-question-circle"></i> Penilaian Karyawan</h1>';
+                                    echo '<h1><i class="bi bi-question-circle"></i> Penilaian Umkm</h1>';
                                     echo '<nav>';
                                     echo '  <ol class="breadcrumb">';
                                     echo '      <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>';
-                                    echo '      <li class="breadcrumb-item active">Penilaian Karyawan</li>';
+                                    echo '      <li class="breadcrumb-item active">Penilaian Umkm</li>';
                                     echo '  </ol>';
                                     echo '</nav>';
                                 }else{

@@ -26,9 +26,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?php if($PageMenu!=="Karyawan"){echo "collapsed";} ?>" href="index.php?Page=Karyawan">
+                <a class="nav-link collapsed" href="index.php?Page=UMKM">
                     <i class="bi bi-person-badge"></i>
-                    <span>Karyawan</span>
+                    <span>UMKM (Alternatif)</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -52,9 +52,9 @@
                 </a>
             </li>
         <?php } ?>
-        <?php if($SessionAkses=="Karyawan"){ ?>
+        <?php if($SessionAkses=="UMKM"){ ?>
             <li class="nav-item">
-                <a class="nav-link <?php if($PageMenu!=="PenilaianKaryawan"){echo "collapsed";} ?>" href="index.php?Page=PenilaianKaryawan">
+                <a class="nav-link <?php if($PageMenu!=="PenilaianUMKM"){echo "collapsed";} ?>" href="index.php?Page=PenilaianUMKM">
                     <i class="bi bi-list-check"></i>
                     <span>Penilaian</span>
                 </a>

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Detail Penilaian Karyawan</h5>
+                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Detail Penilaian Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="FormDetailPenilaianKaryawan">

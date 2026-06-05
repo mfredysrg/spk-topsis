@@ -3,29 +3,34 @@
     date_default_timezone_set('Asia/Jakarta');
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
-    //Tangkap id_karyawan
-    if(empty($_POST['id_karyawan'])){
+    
+    // Menangkap ID (Bisa dari key id_karyawan dari JS lama, atau id_umkm)
+    $id_umkm = "";
+    if(!empty($_POST['id_karyawan'])){
+        $id_umkm = $_POST['id_karyawan'];
+    } else if(!empty($_POST['id_umkm'])){
+        $id_umkm = $_POST['id_umkm'];
+    }
+
+    if(empty($id_umkm)){
         echo '  <div class="row">';
         echo '      <div class="col-md-6 mb-3">';
         echo '          Access ID Data Undefined.';
         echo '      </div>';
         echo '  </div>';
     }else{
-        $id_karyawan=$_POST['id_karyawan'];
-        //Buka data karyawan
-        $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
-        $DataKaryawan = mysqli_fetch_array($QryDetailKaryawan);
-        $id_akses= $DataKaryawan['id_akses'];
-        $nama= $DataKaryawan['nama'];
-        $kontak = $DataKaryawan['kontak'];
-        $jabatan= $DataKaryawan['jabatan'];
-        $nip= $DataKaryawan['nip'];
+        // [REVISI] Buka data UMKM menggantikan Umkm
+        $QryDetailUMKM = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
+        $DataUMKM = mysqli_fetch_array($QryDetailUMKM);
+        $id_akses= $DataUMKM['id_akses'];
+        
         $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM akses WHERE id_akses='$id_akses'")or die(mysqli_error($Conn));
         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
         $email = $DataDetailAkses['email'];
 ?>
-    <input type="hidden" name="id_karyawan" id="id_karyawan" value="<?php echo "$id_karyawan"; ?>">
+    <input type="hidden" name="id_karyawan" id="id_karyawan" value="<?php echo "$id_umkm"; ?>">
     <input type="hidden" name="id_akses" id="id_akses" value="<?php echo "$id_akses"; ?>">
+    
     <div class="row">
         <div class="col-md-6 mt-3">
             <label for="password1_edit">Password</label>

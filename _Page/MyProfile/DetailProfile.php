@@ -14,7 +14,7 @@
                     <div class="col-md-3"><dt>Level Akses</dt></div>
                     <div class="col-md-9 text-primary"><?php echo "$SessionAkses"; ?></div>
                 </div>
-                <?php if($SessionAkses=="Karyawan"){ ?>
+                <?php if($SessionAkses=="Umkm"){ ?>
                     <div class="row mt-2"> 
                         <div class="col-md-3"><dt>NIP</dt></div>
                         <div class="col-md-9 text-primary"><?php echo "$SessionNip"; ?></div>

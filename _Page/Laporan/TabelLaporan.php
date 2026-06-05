@@ -62,14 +62,14 @@
                             $no = 1;
                             //KONDISI PENGATURAN MASING FILTER
                             if($status=="Proses"){
-                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                             }else{
                                 $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
                             }
                             while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
                                 $id_karyawan= $DataKaryawan['id_karyawan'];
-                                //Buka detail karyawan
-                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                //Buka detail umkm
+                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                 $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                 $nama = $DataDetailAkses['nama'];
                                 $jabatan = $DataDetailAkses['jabatan'];
@@ -135,10 +135,10 @@
                                     $query = mysqli_query($Conn, "SELECT*FROM kriteria ORDER BY kode_kriteria ASC");
                                     while ($data = mysqli_fetch_array($query)) {
                                         $id_kriteria= $data['id_kriteria'];
-                                        //Arraykan Karyawan
+                                        //Arraykan Umkm
                                         $JumlahNormalisasi=0;
                                         if($status=="Proses"){
-                                            $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                            $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                                         }else{
                                             $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM periode_penilaian ORDER BY id_karyawan ASC");
                                         }
@@ -163,10 +163,10 @@
                                     $query = mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY id_kriteria ASC");
                                     while ($data = mysqli_fetch_array($query)) {
                                         $id_kriteria= $data['id_kriteria'];
-                                        //Arraykan Karyawan
+                                        //Arraykan Umkm
                                         $JumlahNormalisasi=0;
                                         if($status=="Proses"){
-                                            $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                            $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                                         }else{
                                             $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
                                         }
@@ -203,10 +203,10 @@
                                 }
                                 while ($data = mysqli_fetch_array($query)) {
                                     $id_kriteria= $data['id_kriteria'];
-                                    //Arraykan Karyawan
+                                    //Arraykan Umkm
                                     $JumlahNormalisasi=0;
                                     if($status=="Proses"){
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                                     }else{
                                         $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
                                     }
@@ -324,14 +324,14 @@
                             $no = 1;
                             //KONDISI PENGATURAN MASING FILTER
                             if($status=="Proses"){
-                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                             }else{
                                 $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
                             }
                             while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
                                 $id_karyawan= $DataKaryawan['id_karyawan'];
-                                //Buka detail karyawan
-                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                //Buka detail umkm
+                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                 $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                 $nama = $DataDetailAkses['nama'];
                                 $jabatan = $DataDetailAkses['jabatan'];
@@ -672,14 +672,14 @@
                             $no = 1;
                             //KONDISI PENGATURAN MASING FILTER
                             if($status=="Proses"){
-                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM karyawan ORDER BY id_karyawan ASC");
+                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
                             }else{
                                 $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
                             }
                             while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
                                 $id_karyawan= $DataKaryawan['id_karyawan'];
-                                //Buka detail karyawan
-                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                //Buka detail umkm
+                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                 $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                 $nama = $DataDetailAkses['nama'];
                                 $jabatan = $DataDetailAkses['jabatan'];
@@ -827,7 +827,7 @@
     <div class="row">
         <div class="col-md-12 mt-3">
             <b class="card-title">
-                5. Ranking Karyawan
+                5. Ranking Umkm
             </b>
         </div>
     </div>
@@ -859,8 +859,8 @@
                             while ($DataPreferensi = mysqli_fetch_array($QryPreferensi)) {
                                 $id_karyawan= $DataPreferensi['id_karyawan'];
                                 $preferensi= $DataPreferensi['preferensi'];
-                                //Buka detail karyawan
-                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                //Buka detail umkm
+                                $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
                                 $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                 $nama = $DataDetailAkses['nama'];
                                 $jabatan = $DataDetailAkses['jabatan'];

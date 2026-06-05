@@ -38,24 +38,24 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo"> 
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> 
-                                            2. Tambah Data Karyawan
+                                            2. Tambah Data Umkm
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body"> 
-                                            Data karyawan adalah objek yang akan dilakukan penilaian. 
-                                            Oleh sebab itu data karyawan harus diinput terlebih dulu oleh HRD. Berikut ini
-                                            langkah-langkah untuk menambahkan data karyawan :
+                                            Data umkm adalah objek yang akan dilakukan penilaian. 
+                                            Oleh sebab itu data umkm harus diinput terlebih dulu oleh HRD. Berikut ini
+                                            langkah-langkah untuk menambahkan data umkm :
                                             <ul>
                                                 <li>
-                                                    Masuk ke halaman karyawan melalui menu <b>Karyawan</b>.
+                                                    Masuk ke halaman umkm melalui menu <b>Umkm</b>.
                                                 </li>
                                                 <li>
                                                     Pada bagian atas halaman karyawa tersebut klik pada tombol <b>Tambah</b>. Sistem akan menampilkan
-                                                    form tambah data karyawan baru.
+                                                    form tambah data umkm baru.
                                                 </li>
                                                 <li>
-                                                    Isi nama karyawan, NIP, Kontak, Jabatan, , alamat email, dan password.
+                                                    Isi nama umkm, NIP, Kontak, Jabatan, , alamat email, dan password.
                                                 </li>
                                                 <li>
                                                     Klik pada tombol <b>Simpan</b>, apabila berhasil sistem akan menampilkan notifikasi.

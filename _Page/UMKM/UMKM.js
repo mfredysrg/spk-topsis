@@ -1,29 +1,32 @@
 $('#MenampilkanTabelKaryawan').html("Loading...");
-$('#MenampilkanTabelKaryawan').load("_Page/Karyawan/TabelKaryawan.php");
+$('#MenampilkanTabelKaryawan').load("_Page/UMKM/TabelKaryawan.php");
+
 $('#batas').change(function(){
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelKaryawan').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/TabelKaryawan.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/UMKM/TabelKaryawan.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelKaryawan').html(data);
         }
     });
 });
+
 $('#ProsesBatas').submit(function(){
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelKaryawan').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/TabelKaryawan.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/UMKM/TabelKaryawan.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelKaryawan').html(data);
         }
     });
 });
+
 $('#ProsesFilterKaryawan').submit(function(){
     var batas = $('#FilterBatas').val();
     var OrderBy = $('#OrderBy').val();
@@ -32,21 +35,22 @@ $('#ProsesFilterKaryawan').submit(function(){
     var FilterKeyword = $('#FilterKeyword').val();
     $('#MenampilkanTabelKaryawan').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/TabelKaryawan.php',
-        data 	    :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
+        type        : 'POST',
+        url         : '_Page/UMKM/TabelKaryawan.php',
+        data        :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
         success     : function(data){
             $('#MenampilkanTabelKaryawan').html(data);
             $('#ModalFilterKaryawan').modal('hide');
         }
     });
 });
-//Tambah Karyawan
+
+//Tambah Umkm
 $('#ModalTambahKaryawan').on('show.bs.modal', function (e) {
     $('#FormTambahKaryawan').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormTambahKaryawan.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormTambahKaryawan.php',
         success     : function(data){
             $('#FormTambahKaryawan').html(data);
             //Kondisi saat tampilkan password
@@ -59,15 +63,15 @@ $('#ModalTambahKaryawan').on('show.bs.modal', function (e) {
                     $('#password2').attr('type','password');
                 }
             });
-            //Proses Tambah Karyawan
+            //Proses Tambah Umkm
             $('#ProsesTambahKaryawan').submit(function(){
                 $('#NotifikasiTambahKaryawan').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
                 var form = $('#ProsesTambahKaryawan')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Karyawan/ProsesTambahKaryawan.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/UMKM/ProsesTambahKaryawan.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -85,22 +89,23 @@ $('#ModalTambahKaryawan').on('show.bs.modal', function (e) {
     });
 });
 
-//Detail Karyawan
+//Detail Umkm
 $('#ModalDetailKaryawan').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
     var id_karyawan = pecah[0];
     $('#FormDetailKaryawan').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormDetailKaryawan.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormDetailKaryawan.php',
         data        : {id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormDetailKaryawan').html(data);
         }
     });
 });
-//Edit Karyawan
+
+//Edit Umkm
 $('#ModalEditKaryawan').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
@@ -114,20 +119,20 @@ $('#ModalEditKaryawan').on('show.bs.modal', function (e) {
     var keyword_by = pecah[7];
     $('#FormEditKaryawan').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormEditKaryawan.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormEditKaryawan.php',
         data        : {id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormEditKaryawan').html(data);
-            //Proses Edit Karyawan
+            //Proses Edit Umkm
             $('#ProsesEditKaryawan').submit(function(){
                 $('#NotifikasiEditKaryawan').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
                 var form = $('#ProsesEditKaryawan')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Karyawan/ProsesEditKaryawan.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/UMKM/ProsesEditKaryawan.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -138,13 +143,13 @@ $('#ModalEditKaryawan').on('show.bs.modal', function (e) {
                         if(NotifikasiEditKaryawanBerhasil=="Success"){
                             $('#MenampilkanTabelKaryawan').html("Loading...");
                             $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Karyawan/TabelKaryawan.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
+                                type        : 'POST',
+                                url         : '_Page/UMKM/TabelKaryawan.php',
+                                data        :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
                                 success     : function(data){
                                     $('#MenampilkanTabelKaryawan').html(data);
                                     $('#ModalEditKaryawan').modal('hide');
-                                    swal("Good Job!", "Edit Karyawan Berhasil!", "success");
+                                    swal("Good Job!", "Edit UMKM Berhasil!", "success");
                                 }
                             });
                         }
@@ -154,6 +159,7 @@ $('#ModalEditKaryawan').on('show.bs.modal', function (e) {
         }
     });
 });
+
 //Modal Edit Password
 $('#ModalEditPassword').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
@@ -168,8 +174,8 @@ $('#ModalEditPassword').on('show.bs.modal', function (e) {
     var keyword_by = pecah[7];
     $('#FormEditPassword').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormEditPassword.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormEditPassword.php',
         data        : {id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormEditPassword').html(data);
@@ -189,9 +195,9 @@ $('#ModalEditPassword').on('show.bs.modal', function (e) {
                 var form = $('#ProsesEditPassword')[0];
                 var data = new FormData(form);
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Karyawan/ProsesEditPassword.php',
-                    data 	    :  data,
+                    type        : 'POST',
+                    url         : '_Page/UMKM/ProsesEditPassword.php',
+                    data        :  data,
                     cache       : false,
                     processData : false,
                     contentType : false,
@@ -202,9 +208,9 @@ $('#ModalEditPassword').on('show.bs.modal', function (e) {
                         if(NotifikasiEditPasswordBerhasil=="Success"){
                             $('#MenampilkanTabelKaryawan').html("Loading...");
                             $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Karyawan/TabelKaryawan.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
+                                type        : 'POST',
+                                url         : '_Page/UMKM/TabelKaryawan.php',
+                                data        :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
                                 success     : function(data){
                                     $('#MenampilkanTabelKaryawan').html(data);
                                     $('#ModalEditPassword').modal('hide');
@@ -218,7 +224,8 @@ $('#ModalEditPassword').on('show.bs.modal', function (e) {
         }
     });
 });
-//Hapus Karyawan
+
+//Hapus Umkm
 $('#ModalDeleteKaryawan').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
@@ -232,26 +239,26 @@ $('#ModalDeleteKaryawan').on('show.bs.modal', function (e) {
     var keyword_by = pecah[7];
     $('#FormDeleteKaryawan').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormDeleteKaryawan.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormDeleteKaryawan.php',
         data        : {id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormDeleteKaryawan').html(data);
-            //Konfirmasi Hapus Karyawan
+            //Konfirmasi Hapus Umkm
             $('#KonfirmasiHapusKaryawan').click(function(){
                 $('#NotifikasiHapusKaryawan').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Karyawan/ProsesHapusKaryawan.php',
+                    type        : 'POST',
+                    url         : '_Page/UMKM/ProsesHapusKaryawan.php',
                     data        : {id_karyawan: id_karyawan},
                     success     : function(data){
                         $('#NotifikasiHapusKaryawan').html(data);
                         var NotifikasiHapusKaryawanBerhasil=$('#NotifikasiHapusKaryawanBerhasil').html();
                         if(NotifikasiHapusKaryawanBerhasil=="Success"){
                             $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Karyawan/TabelKaryawan.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
+                                type        : 'POST',
+                                url         : '_Page/UMKM/TabelKaryawan.php',
+                                data        :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
                                 success     : function(data){
                                     $('#MenampilkanTabelKaryawan').html(data);
                                     $('#ModalDeleteKaryawan').modal('hide');
@@ -265,7 +272,8 @@ $('#ModalDeleteKaryawan').on('show.bs.modal', function (e) {
         }
     });
 });
-//Modal Detail Penilaian Karyawan
+
+//Modal Detail Penilaian Umkm
 $('#ModalDetailPenilaianKaryawan').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
@@ -273,8 +281,8 @@ $('#ModalDetailPenilaianKaryawan').on('show.bs.modal', function (e) {
     var id_karyawan = pecah[1];
     $('#FormDetailPenilaianKaryawan').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormDetailPenilaianKaryawan.php',
+        type        : 'POST',
+        url         : '_Page/UMKM/FormDetailPenilaianKaryawan.php',
         data        : {id_periode_penilaian: id_periode_penilaian, id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormDetailPenilaianKaryawan').html(data);

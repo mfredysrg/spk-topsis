@@ -46,13 +46,13 @@ INSERT INTO `akses` (`id_akses`, `id_divisi`, `nama`, `email`, `password`, `akse
 (1, 0, 'Hudzaifa', 'dhiforester@gmail.com', 'f4a3229c9c5f1bdd9c6a6791080791b7', 'HRD'),
 (2, 6, 'Windi Yanuariska', 'windygiga@gmail.com', 'd748c957a0018bfe3d974f8c44e4f3b7', 'Kepala Divisi'),
 (3, 1, 'Syamsul Maarif', 'syamsulmaarif@gmail.com', '39a4dda18c93ccf4d47e44580bcaf1a0', 'Kepala Divisi'),
-(4, 1, 'Ujang Suherman', 'ujang@gmail.com', '2ba672e97d6899f4d75e390daa5a35fe', 'Karyawan'),
-(5, 1, 'Sabil Kurniawan', 'sabil@gmail.com', '6e5870b70ea0f4b88932910f017c1b53', 'Karyawan'),
-(6, 1, 'Adung Sudiadi', 'adung@gmail.com', '5203e18ca19b351e51d598cdc9adeb62', 'Karyawan'),
+(4, 1, 'Ujang Suherman', 'ujang@gmail.com', '2ba672e97d6899f4d75e390daa5a35fe', 'Umkm'),
+(5, 1, 'Sabil Kurniawan', 'sabil@gmail.com', '6e5870b70ea0f4b88932910f017c1b53', 'Umkm'),
+(6, 1, 'Adung Sudiadi', 'adung@gmail.com', '5203e18ca19b351e51d598cdc9adeb62', 'Umkm'),
 (7, 7, 'Didi Muhadi', 'didimuhadi@gmail.com', '9ccd1206b99e130c54fb4e9fa1771513', 'Kepala Divisi'),
 (8, 4, 'Bayu Anugerah', 'bayuanugerah@gmail.com', 'cfd111106dc95e430bf5eff5f2d71b87', 'Kepala Divisi'),
-(9, 6, 'Mia Rusmia, S.Pt.', 'mia@gmail.com', 'a0e9c90c2755cb0611ae7f198604905f', 'Karyawan'),
-(10, 6, 'Elfa Robi, Lc.', 'elfa@gmail.com', '29e4973de27a17dbeb7968f581abe96e', 'Karyawan'),
+(9, 6, 'Mia Rusmia, S.Pt.', 'mia@gmail.com', 'a0e9c90c2755cb0611ae7f198604905f', 'Umkm'),
+(10, 6, 'Elfa Robi, Lc.', 'elfa@gmail.com', '29e4973de27a17dbeb7968f581abe96e', 'Umkm'),
 (11, 0, 'Ustadz Mulyadin, Lc', 'mulyadin@gmail.com', '4eb5ed033b5aead94fbddd707996c4a3', 'Pimpinan');
 
 -- --------------------------------------------------------
@@ -124,11 +124,11 @@ INSERT INTO `divisi` (`id_divisi`, `nama_divisi`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karyawan`
+-- Table structure for table `umkm`
 --
 
-DROP TABLE IF EXISTS `karyawan`;
-CREATE TABLE IF NOT EXISTS `karyawan` (
+DROP TABLE IF EXISTS `umkm`;
+CREATE TABLE IF NOT EXISTS `umkm` (
   `id_karyawan` int(15) NOT NULL AUTO_INCREMENT,
   `id_akses` int(15) NOT NULL,
   `nama` text NOT NULL,
@@ -139,10 +139,10 @@ CREATE TABLE IF NOT EXISTS `karyawan` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `karyawan`
+-- Dumping data for table `umkm`
 --
 
-INSERT INTO `karyawan` (`id_karyawan`, `id_akses`, `nama`, `nip`, `kontak`, `jabatan`) VALUES
+INSERT INTO `umkm` (`id_karyawan`, `id_akses`, `nama`, `nip`, `kontak`, `jabatan`) VALUES
 (1, 4, 'Ujang Suherman', 'PPHH0001', '08960000001', 'Driver'),
 (2, 5, 'Sabil Kurniawan', 'PPHH0002', '08960000002', 'Driver'),
 (3, 6, 'Adung Sudiadi', 'PPHH0003', '08960000003', 'Driver'),

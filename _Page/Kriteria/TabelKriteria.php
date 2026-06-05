@@ -1,8 +1,15 @@
 <?php
-    //koneksi dan session
-    ini_set("display_errors","off");
+    // KITA NYALAKAN FITUR ERROR AGAR KETAHUAN APA YANG SALAH
+    ini_set("display_errors", "1");
+    error_reporting(E_ALL);
+    
     include "../../_Config/Connection.php";
-    // include "../../_Config/Session.php";
+
+    // Cek koneksi DB
+    if (!$Conn) {
+        die("Koneksi Error: " . mysqli_connect_error());
+    }
+
     //Keyword_by
     if(!empty($_POST['keyword_by'])){
         $keyword_by=$_POST['keyword_by'];
@@ -47,17 +54,23 @@
         $page="1";
         $posisi = 0;
     }
+    
+    // [DEBUGGING] Menambahkan or die(mysqli_error) agar error SQL langsung tampil
     if(empty($keyword_by)){
         if(empty($keyword)){
-            $jml_data = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM kriteria"));
+            $QryJml = mysqli_query($Conn, "SELECT * FROM kriteria") or die("Error SQL 1: " . mysqli_error($Conn));
+            $jml_data = mysqli_num_rows($QryJml);
         }else{
-            $jml_data = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM kriteria WHERE kode_kriteria like '%$keyword%' OR kriteria like '%$keyword%' OR atribut like '%$keyword%' OR bobot like '%$keyword%'"));
+            $QryJml = mysqli_query($Conn, "SELECT * FROM kriteria WHERE kode_kriteria like '%$keyword%' OR kriteria like '%$keyword%' OR atribut like '%$keyword%' OR bobot_anp like '%$keyword%' OR bobot_swara like '%$keyword%'") or die("Error SQL 2: " . mysqli_error($Conn));
+            $jml_data = mysqli_num_rows($QryJml);
         }
     }else{
         if(empty($keyword)){
-            $jml_data = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM kriteria"));
+            $QryJml = mysqli_query($Conn, "SELECT * FROM kriteria") or die("Error SQL 3: " . mysqli_error($Conn));
+            $jml_data = mysqli_num_rows($QryJml);
         }else{
-            $jml_data = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM kriteria WHERE ($keyword_by like '%$keyword%')"));
+            $QryJml = mysqli_query($Conn, "SELECT * FROM kriteria WHERE ($keyword_by like '%$keyword%')") or die("Error SQL 4: " . mysqli_error($Conn));
+            $jml_data = mysqli_num_rows($QryJml);
         }
     }
 ?>
@@ -73,10 +86,9 @@
         $.ajax({
             url     : "_Page/Kriteria/TabelKriteria.php",
             method  : "POST",
-            data 	:  { page: valueNext, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
+            data    :  { page: valueNext, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success: function (data) {
                 $('#MenampilkanTabelKriteria').html(data);
-
             }
         })
     });
@@ -91,7 +103,7 @@
         $.ajax({
             url     : "_Page/Kriteria/TabelKriteria.php",
             method  : "POST",
-            data 	:  { page: ValuePrev,batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
+            data    :  { page: ValuePrev,batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success : function (data) {
                 $('#MenampilkanTabelKriteria').html(data);
             }
@@ -114,7 +126,7 @@
             $.ajax({
                 url     : "_Page/Kriteria/TabelKriteria.php",
                 method  : "POST",
-                data 	:  { page: PageNumber, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
+                data    :  { page: PageNumber, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
                 success: function (data) {
                     $('#MenampilkanTabelKriteria').html(data);
                 }
@@ -129,84 +141,67 @@
                 <table class="table table-hover table-bordered align-items-center mb-0">
                     <thead class="">
                         <tr>
-                            <th class="text-center">
-                                <b>No</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Kode</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Kriteria</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Alternatif</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Atribut</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Bobot</b>
-                            </th>
-                            <th class="text-center">
-                                <b>Option</b>
-                            </th>
+                            <th class="text-center"><b>No</b></th>
+                            <th class="text-center"><b>Kode</b></th>
+                            <th class="text-center"><b>Kriteria</b></th>
+                            <th class="text-center"><b>Alternatif</b></th>
+                            <th class="text-center"><b>Atribut</b></th>
+                            <th class="text-center"><b>Bobot ANP</b></th>
+                            <th class="text-center"><b>Bobot SWARA</b></th>
+                            <th class="text-center"><b>Option</b></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                             if(empty($jml_data)){
                                 echo '<tr>';
-                                echo '  <td colspan="7" class="text-center text-danger">Tidak Ada Data Yang Ditampilan</td>';
+                                echo '  <td colspan="8" class="text-center text-danger">Tidak Ada Data Yang Ditampilkan</td>';
                                 echo '</tr>';
                             }else{
                                 $no = 1+$posisi;
-                                //KONDISI PENGATURAN MASING FILTER
+                                
                                 if(empty($keyword_by)){
                                     if(empty($keyword)){
-                                        $query = mysqli_query($Conn, "SELECT*FROM kriteria ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas");
+                                        $query = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas") or die("Error SQL 5: " . mysqli_error($Conn));
                                     }else{
-                                        $query = mysqli_query($Conn, "SELECT*FROM kriteria WHERE kode_kriteria like '%$keyword%' OR kriteria like '%$keyword%' OR atribut like '%$keyword%' OR bobot like '%$keyword%' ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas");
+                                        $query = mysqli_query($Conn, "SELECT * FROM kriteria WHERE kode_kriteria like '%$keyword%' OR kriteria like '%$keyword%' OR atribut like '%$keyword%' OR bobot_anp like '%$keyword%' OR bobot_swara like '%$keyword%' ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas") or die("Error SQL 6: " . mysqli_error($Conn));
                                     }
                                 }else{
                                     if(empty($keyword)){
-                                        $query = mysqli_query($Conn, "SELECT*FROM kriteria ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas");
+                                        $query = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas") or die("Error SQL 7: " . mysqli_error($Conn));
                                     }else{
-                                        $query = mysqli_query($Conn, "SELECT*FROM kriteria WHERE ($keyword_by like '%$keyword%') ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas");
+                                        $query = mysqli_query($Conn, "SELECT * FROM kriteria WHERE ($keyword_by like '%$keyword%') ORDER BY $OrderBy $ShortBy LIMIT $posisi, $batas") or die("Error SQL 8: " . mysqli_error($Conn));
                                     }
                                 }
+                                
                                 while ($data = mysqli_fetch_array($query)) {
                                     $id_kriteria= $data['id_kriteria'];
                                     $kode_kriteria= $data['kode_kriteria'];
                                     $kriteria= $data['kriteria'];
                                     $atribut= $data['atribut'];
-                                    $bobot= $data['bobot'];
+                                    
+                                    // Panggil bobot baru
+                                    $bobot_anp= isset($data['bobot_anp']) ? $data['bobot_anp'] : 'N/A';
+                                    $bobot_swara= isset($data['bobot_swara']) ? $data['bobot_swara'] : 'N/A';
+                                    
                                     if($atribut=="Benefit"){
                                         $LabelAtribut='<span class="badge badge-success">Benefit</span>';
                                     }else{
                                         $LabelAtribut='<span class="badge badge-warning">Cost</span>';
                                     }
+                                    
                                     //Hitung jumlah alternatif
-                                    $JumlahAlternatif = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM alternatif WHERE id_kriteria='$id_kriteria'"));
+                                    $QryAlt = mysqli_query($Conn, "SELECT * FROM alternatif WHERE id_kriteria='$id_kriteria'") or die("Error SQL Alt: " . mysqli_error($Conn));
+                                    $JumlahAlternatif = mysqli_num_rows($QryAlt);
                         ?>
                             <tr>
-                                <td class="text-center text-xs">
-                                    <?php echo "$no" ?>
-                                </td>
-                                <td class="text-left" align="left">
-                                    <?php echo "$kode_kriteria";?>
-                                </td>
-                                <td class="text-left" align="left">
-                                    <?php echo "$kriteria";?>
-                                </td>
-                                <td class="text-left" align="left">
-                                    <?php echo "$JumlahAlternatif Alternatif";?>
-                                </td>
-                                <td class="text-left" align="left">
-                                    <?php echo "$LabelAtribut";?>
-                                </td>
-                                <td class="text-left" align="left">
-                                    <?php echo "$bobot";?>
-                                </td>
+                                <td class="text-center text-xs"><?php echo "$no" ?></td>
+                                <td class="text-left" align="left"><?php echo "$kode_kriteria";?></td>
+                                <td class="text-left" align="left"><?php echo "$kriteria";?></td>
+                                <td class="text-left" align="left"><?php echo "$JumlahAlternatif Alternatif";?></td>
+                                <td class="text-left" align="left"><?php echo "$LabelAtribut";?></td>
+                                <td class="text-left" align="left"><?php echo "$bobot_anp";?></td>
+                                <td class="text-left" align="left"><?php echo "$bobot_swara";?></td>
                                 <td align="center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalDetailKriteria" data-id="<?php echo "$id_kriteria"; ?>">
@@ -234,19 +229,14 @@
     <div class="btn-group shadow-0" role="group" aria-label="Basic example">
         <?php
             //Mengatur Halaman
-            $JmlHalaman = ceil($jml_data/$batas); 
-            $JmlHalaman_real = ceil($jml_data/$batas); 
+            $JmlHalaman = empty($jml_data) ? 1 : ceil($jml_data/$batas); 
             $prev=$page-1;
             $next=$page+1;
             if($next>$JmlHalaman){
                 $next=$page;
-            }else{
-                $next=$page+1;
             }
             if($prev<"1"){
                 $prev="1";
-            }else{
-                $prev=$page-1;
             }
         ?>
         <button class="btn btn-sm btn-outline-info" id="PrevPage" value="<?php echo $prev;?>">

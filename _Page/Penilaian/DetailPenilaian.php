@@ -29,7 +29,7 @@
         $status= $DataPeriodePenilaian['status'];
         //Jumlah Kriteria
         $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-        // [REVISI] Jumlah UMKM (Mengganti Karyawan)
+        // [REVISI] Jumlah UMKM (Mengganti Umkm)
         $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
 ?>
     <div class="card">

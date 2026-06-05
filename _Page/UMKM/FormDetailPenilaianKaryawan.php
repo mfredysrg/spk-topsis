@@ -14,14 +14,14 @@
         if(empty($_POST['id_karyawan'])){
             echo '  <div class="row">';
             echo '      <div class="col-md-12 mb-3">';
-            echo '          ID Karyawan Tidak Ditemukan.';
+            echo '          ID Umkm Tidak Ditemukan.';
             echo '      </div>';
             echo '  </div>';
         }else{
             $id_periode_penilaian=$_POST['id_periode_penilaian'];
             $id_karyawan=$_POST['id_karyawan'];
-            //Buka data karyawan
-            $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM karyawan WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+            //Buka data umkm
+            $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
             $DataKaryawan = mysqli_fetch_array($QryDetailKaryawan);
             $id_akses= $DataKaryawan['id_akses'];
             $nama= $DataKaryawan['nama'];
@@ -41,7 +41,7 @@
 ?>
     <div class="row mt-2"> 
         <div class="col-md-12 mb-3">
-            <b class="card-title">Penilaian Karyawan</b>
+            <b class="card-title">Penilaian Umkm</b>
         </div>
     </div>
     <div class="row mt-2"> 

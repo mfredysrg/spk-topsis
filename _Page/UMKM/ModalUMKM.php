@@ -3,7 +3,7 @@
         <div class="modal-content">
             <form action="javascript:void(0);" id="ProsesFilterKaryawan">
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title text-light"><i class="bi bi-funnel"></i> Filter Karyawan</h5>
+                    <h5 class="modal-title text-light"><i class="bi bi-funnel"></i> Filter Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -74,7 +74,7 @@
         <div class="modal-content">
             <form action="javascript:void(0);" id="ProsesTambahKaryawan">
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Tambah Karyawan</h5>
+                    <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Tambah Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="FormTambahKaryawan">
@@ -96,7 +96,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title text-light"><i class="bi bi-person-fill"></i> Detail Karyawan</h5>
+                <h5 class="modal-title text-light"><i class="bi bi-person-fill"></i> Detail Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="FormDetailKaryawan">
@@ -110,7 +110,7 @@
         <div class="modal-content">
             <form action="javascript:void(0);" id="ProsesEditKaryawan">
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Edit Karyawan</h5>
+                    <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Edit Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="FormEditKaryawan">
@@ -155,7 +155,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-danger">
-                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Hapus Karyawan</h5>
+                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Hapus Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="FormDeleteKaryawan">
@@ -202,7 +202,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Detail Penilaian Karyawan</h5>
+                <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Detail Penilaian Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="FormDetailPenilaianKaryawan">

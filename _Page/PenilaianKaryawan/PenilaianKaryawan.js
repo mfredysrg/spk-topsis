@@ -1,4 +1,4 @@
-//Modal Detail Penilaian Karyawan
+//Modal Detail Penilaian Umkm
 $('#ModalDetailPenilaianKaryawan').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
@@ -7,7 +7,7 @@ $('#ModalDetailPenilaianKaryawan').on('show.bs.modal', function (e) {
     $('#FormDetailPenilaianKaryawan').html("Loading...");
     $.ajax({
         type 	    : 'POST',
-        url 	    : '_Page/Karyawan/FormDetailPenilaianKaryawan.php',
+        url 	    : '_Page/Umkm/FormDetailPenilaianKaryawan.php',
         data        : {id_periode_penilaian: id_periode_penilaian, id_karyawan: id_karyawan},
         success     : function(data){
             $('#FormDetailPenilaianKaryawan').html(data);

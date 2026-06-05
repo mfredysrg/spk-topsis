@@ -28,9 +28,9 @@
             swal("Welcome back!", "Atur Akses Berhasil", "success");
         </script>
     <?php } ?>
-    <?php if($NotifikasiSwal=="Tambah Karyawan Berhasil"){ ?>
+    <?php if($NotifikasiSwal=="Tambah UMKM Berhasil"){ ?>
         <script>
-            swal("Success!", "Tambah Karyawan Berhasil", "success");
+            swal("Success!", "Tambah UMKM Berhasil", "success");
         </script>
     <?php } ?>
     <?php if($NotifikasiSwal=="Tambah Kriteria Berhasil"){ ?>

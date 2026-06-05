@@ -3,8 +3,8 @@
         <div class="col-lg-12">
             <div class="alert alert-info alert-dismissible fade show" role="alert"> 
                 <small>
-                    Halaman ini berfungsi untuk mengelola data penilaian Bantuan Sosial UMKM.
-                    Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan data penilaian UMKM. 
+                    Halaman ini berfungsi untuk mengelola data <b>UMKM</b> yang akan dijadikan sebagai alternatif penilaian penerima bantuan sosial.
+                    Silahkan gunakan tombol <b>Tambah UMKM</b> untuk mendaftarkan data baru. 
                 </small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -28,7 +28,7 @@
                                 <small>Data</small>
                             </div>
                             <div class="col-md-3 mt-3">
-                                <input type="text" name="keyword" id="keyword" class="form-control">
+                                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Cari Nama UMKM...">
                                 <small>Pencarian</small>
                             </div>
                             <div class="col-md-2 mt-3">
@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-md-3 text-center mt-3">
                                 <button type="button" class="btn btn-md btn-primary btn-block btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalTambahKaryawan">
-                                    <i class="bi bi-person-plus"></i> Tambah
+                                    <i class="bi bi-shop"></i> Tambah UMKM
                                 </button>
                             </div>
                         </div>
