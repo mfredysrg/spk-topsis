@@ -171,14 +171,14 @@
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
                                     if($status=="Proses"){
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                     }else{
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
                                     }
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
@@ -200,7 +200,7 @@
                                                 while ($data = mysqli_fetch_array($query)) {
                                                     $id_kriteria= $data['id_kriteria'];
                                                     //Buka nilai
-                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                     $DataNilai = mysqli_fetch_array($QryNilai);
                                                     if(empty($DataNilai['nilai'])){
                                                         $nilai =0;
@@ -217,7 +217,7 @@
                                                 while ($data = mysqli_fetch_array($query)) {
                                                     $id_kriteria= $data['id_kriteria'];
                                                     //Buka nilai
-                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                     $DataNilai = mysqli_fetch_array($QryNilai);
                                                     if(empty($DataNilai['nilai'])){
                                                         $nilai =0;
@@ -247,14 +247,14 @@
                                                 //Arraykan Umkm
                                                 $JumlahNormalisasi=0;
                                                 if($status=="Proses"){
-                                                    $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                                    $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                                 }else{
-                                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM periode_penilaian ORDER BY id_karyawan ASC");
+                                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM periode_penilaian ORDER BY id_UMKM ASC");
                                                 }
-                                                while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                                    $id_karyawan= $DataKaryawan['id_karyawan'];
+                                                while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                                    $id_UMKM= $DataUMKM['id_UMKM'];
                                                     //Buka nilai
-                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                     $DataNilai = mysqli_fetch_array($QryNilai);
                                                     if(empty($DataNilai['nilai'])){
                                                         $nilai =0;
@@ -275,14 +275,14 @@
                                                 //Arraykan Umkm
                                                 $JumlahNormalisasi=0;
                                                 if($status=="Proses"){
-                                                    $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                                    $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                                 }else{
-                                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
                                                 }
-                                                while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                                    $id_karyawan= $DataKaryawan['id_karyawan'];
+                                                while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                                    $id_UMKM= $DataUMKM['id_UMKM'];
                                                     //Buka nilai
-                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                    $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                     $DataNilai = mysqli_fetch_array($QryNilai);
                                                     if(empty($DataNilai['nilai'])){
                                                         $nilai =0;
@@ -315,14 +315,14 @@
                                             //Arraykan Umkm
                                             $JumlahNormalisasi=0;
                                             if($status=="Proses"){
-                                                $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                                $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                             }else{
-                                                $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                                $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
                                             }
-                                            while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                                $id_karyawan= $DataKaryawan['id_karyawan'];
+                                            while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                                $id_UMKM= $DataUMKM['id_UMKM'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -439,14 +439,14 @@
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
                                     if($status=="Proses"){
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                     }else{
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
                                     }
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
@@ -479,7 +479,7 @@
                                                 $bobot = ($metode_pembobotan == 'ANP') ? $DataKriteria['bobot_anp'] : $DataKriteria['bobot_swara'];
                                                 
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -498,19 +498,19 @@
                                                 $NormalisasiTerbobot=$NilaiNormalisasi*$bobot;
                                                 $PembulatanNormalisasiTerbobot =round($NormalisasiTerbobot,2);
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 if(empty($DataNormalisasiTerbobot['id_normalisasi_terbobot'])){
                                                     //Tambah data
                                                     $entry="INSERT INTO normalisasi_terbobot (
                                                         id_periode_penilaian,
                                                         id_kriteria,
-                                                        id_karyawan,
+                                                        id_UMKM,
                                                         normalisasi_terbobot
                                                     ) VALUES (
                                                         '$id_periode_penilaian',
                                                         '$id_kriteria',
-                                                        '$id_karyawan',
+                                                        '$id_UMKM',
                                                         '$PembulatanNormalisasiTerbobot'
                                                     )";
                                                     $Input=mysqli_query($Conn, $entry);
@@ -794,14 +794,14 @@
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
                                     if($status=="Proses"){
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                     }else{
-                                        $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
                                     }
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
@@ -829,7 +829,7 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 $id_normalisasi_terbobot=$DataNormalisasiTerbobot['id_normalisasi_terbobot'];
                                                 $normalisasi_terbobot=$DataNormalisasiTerbobot['normalisasi_terbobot'];
@@ -864,7 +864,7 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 $id_normalisasi_terbobot=$DataNormalisasiTerbobot['id_normalisasi_terbobot'];
                                                 $normalisasi_terbobot=$DataNormalisasiTerbobot['normalisasi_terbobot'];
@@ -891,19 +891,19 @@
                                             $Preferensi=$AkarJumlahPreferensiNegatif/$AkumulasiPositifNegatif;
                                             $PreferensiBulat=round($Preferensi,2);
                                             //cek apakah ada data preferensi
-                                            $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                            $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                             $DataPreferensi = mysqli_fetch_array($QryPreferensi);
                                             if(empty($DataPreferensi['id_preferensi'])){
                                                 //Tambah data
                                                 $entry="INSERT INTO preferensi (
                                                     id_periode_penilaian,
-                                                    id_karyawan,
+                                                    id_UMKM,
                                                     positif,
                                                     negatif,
                                                     preferensi
                                                 ) VALUES (
                                                     '$id_periode_penilaian',
-                                                    '$id_karyawan',
+                                                    '$id_UMKM',
                                                     '$AkarJumlahPreferensiPositifBulat',
                                                     '$AkarJumlahPreferensiNegatifBulat',
                                                     '$PreferensiBulat'
@@ -973,10 +973,10 @@
                                     //KONDISI PENGATURAN MASING FILTER
                                     $QryPreferensi = mysqli_query($Conn, "SELECT*FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY preferensi DESC");
                                     while ($DataPreferensi = mysqli_fetch_array($QryPreferensi)) {
-                                        $id_karyawan= $DataPreferensi['id_karyawan'];
+                                        $id_UMKM= $DataPreferensi['id_UMKM'];
                                         $preferensi= $DataPreferensi['preferensi'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];

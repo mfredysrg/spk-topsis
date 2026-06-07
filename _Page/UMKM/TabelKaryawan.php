@@ -74,11 +74,11 @@
         var OrderBy = "<?php echo $OrderBy; ?>";
         var ShortBy = "<?php echo $ShortBy; ?>";
         $.ajax({
-            url     : "_Page/Umkm/TabelKaryawan.php",
+            url     : "_Page/Umkm/TabelUMKM.php",
             method  : "POST",
             data    :  { page: valueNext, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success: function (data) {
-                $('#MenampilkanTabelKaryawan').html(data);
+                $('#MenampilkanTabelUMKM').html(data);
             }
         })
     });
@@ -91,11 +91,11 @@
         var OrderBy = "<?php echo $OrderBy; ?>";
         var ShortBy = "<?php echo $ShortBy; ?>";
         $.ajax({
-            url     : "_Page/Umkm/TabelKaryawan.php",
+            url     : "_Page/Umkm/TabelUMKM.php",
             method  : "POST",
             data    :  { page: ValuePrev, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success : function (data) {
-                $('#MenampilkanTabelKaryawan').html(data);
+                $('#MenampilkanTabelUMKM').html(data);
             }
         })
     });
@@ -112,11 +112,11 @@
             var OrderBy = "<?php echo $OrderBy; ?>";
             var ShortBy = "<?php echo $ShortBy; ?>";
             $.ajax({
-                url     : "_Page/Umkm/TabelKaryawan.php",
+                url     : "_Page/Umkm/TabelUMKM.php",
                 method  : "POST",
                 data    :  { page: PageNumber, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
                 success: function (data) {
-                    $('#MenampilkanTabelKaryawan').html(data);
+                    $('#MenampilkanTabelUMKM').html(data);
                 }
             })
         });
@@ -177,7 +177,7 @@
                                     <?php echo $no; ?>
                                 </td>
                                 <td class="text-left" align="left">
-                                    <a href="index.php?Page=Umkm&Sub=DetailKaryawan&id_karyawan=<?php echo $id_umkm; ?>">
+                                    <a href="index.php?Page=Umkm&Sub=DetailUMKM&id_UMKM=<?php echo $id_umkm; ?>">
                                         <b><?php echo $nama_umkm; ?></b>
                                     </a>
                                 </td>
@@ -195,10 +195,10 @@
                                         <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalEditPassword" data-id="<?php echo "$id_umkm,$keyword,$batas,$ShortBy,$OrderBy,$page,$keyword_by"; ?>">
                                             <i class="bi bi-key"></i>
                                         </button>  
-                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalEditKaryawan" data-id="<?php echo "$id_umkm,$keyword,$batas,$ShortBy,$OrderBy,$page,$keyword_by"; ?>">
+                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalEditUMKM" data-id="<?php echo "$id_umkm,$keyword,$batas,$ShortBy,$OrderBy,$page,$keyword_by"; ?>">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>  
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalDeleteKaryawan" data-id="<?php echo "$id_umkm,$keyword,$batas,$ShortBy,$OrderBy,$page,$keyword_by"; ?>">
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalDeleteUMKM" data-id="<?php echo "$id_umkm,$keyword,$batas,$ShortBy,$OrderBy,$page,$keyword_by"; ?>">
                                             <i class="bi bi-x"></i>
                                         </button>   
                                     </div>

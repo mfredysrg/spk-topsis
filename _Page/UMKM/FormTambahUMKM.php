@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12 mt-3" id="NotifikasiTambahKaryawan">
+    <div class="col-md-12 mt-3" id="NotifikasiTambahUMKM">
         <small class="text-primary">Pastikan data yang anda input sudah benar.</small>
     </div>
 </div>

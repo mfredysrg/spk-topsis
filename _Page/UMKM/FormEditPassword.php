@@ -4,10 +4,10 @@
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
     
-    // Menangkap ID (Bisa dari key id_karyawan dari JS lama, atau id_umkm)
+    // Menangkap ID (Bisa dari key id_UMKM dari JS lama, atau id_umkm)
     $id_umkm = "";
-    if(!empty($_POST['id_karyawan'])){
-        $id_umkm = $_POST['id_karyawan'];
+    if(!empty($_POST['id_UMKM'])){
+        $id_umkm = $_POST['id_UMKM'];
     } else if(!empty($_POST['id_umkm'])){
         $id_umkm = $_POST['id_umkm'];
     }
@@ -28,7 +28,7 @@
         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
         $email = $DataDetailAkses['email'];
 ?>
-    <input type="hidden" name="id_karyawan" id="id_karyawan" value="<?php echo "$id_umkm"; ?>">
+    <input type="hidden" name="id_UMKM" id="id_UMKM" value="<?php echo "$id_umkm"; ?>">
     <input type="hidden" name="id_akses" id="id_akses" value="<?php echo "$id_akses"; ?>">
     
     <div class="row">

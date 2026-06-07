@@ -3,7 +3,7 @@
     include "../../_Config/Session.php";
 
     // Validasi data kosong
-    if(empty($_POST['id_karyawan'])){
+    if(empty($_POST['id_UMKM'])){
         echo '<small class="text-danger">ID Data tidak boleh kosong</small>';
     }else if(empty($_POST['nama'])){
         echo '<small class="text-danger">Nama tidak boleh kosong</small>';
@@ -17,7 +17,7 @@
         echo '<small class="text-danger">Jabatan / Pemilik tidak boleh kosong</small>';
     }else{
         // Tangkap Data
-        $id_umkm = $_POST['id_karyawan'];
+        $id_umkm = $_POST['id_UMKM'];
         $nama = $_POST['nama'];
         $nip = $_POST['nip'];
         $kontak = $_POST['kontak'];
@@ -37,7 +37,7 @@
             $UpdateUMKM = mysqli_query($Conn,"UPDATE umkm SET nama_umkm='$nama', nip='$nip', kontak='$kontak', nama_pemilik='$nama_pemilik' WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
             
             if($UpdateUMKM){
-                echo '<span id="NotifikasiEditKaryawanBerhasil">Success</span>';
+                echo '<span id="NotifikasiEditUMKMBerhasil">Success</span>';
             }else{
                 echo '<small class="text-danger">Terjadi kesalahan pada saat menyimpan data UMKM</small>';
             }

@@ -30,7 +30,7 @@
         //Jumlah Kriteria
         $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
         //Jumlah Umkm
-        $JumlahKaryawan = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+        $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
 ?>
     <div class="card">
         <div class="card-header">
@@ -41,7 +41,7 @@
                     </b>
                 </div>
                 <div class="col-md-2">
-                    <a href="index.php?Page=PenilaianKaryawan" class="btn btn-md btn-dark btn-rounded btn-block">
+                    <a href="index.php?Page=PenilaianUMKM" class="btn btn-md btn-dark btn-rounded btn-block">
                         <i class="bi bi-arrow-left-short"></i> Kembali
                     </a>
                 </div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="row mt-2"> 
                         <div class="col-md-5"><dt>Umkm Dinilai</dt></div>
-                        <div class="col-md-7"><?php echo "$JumlahKaryawan Data"; ?></div>
+                        <div class="col-md-7"><?php echo "$JumlahUMKM Data"; ?></div>
                     </div>
                 </div>
             </div>
@@ -118,16 +118,16 @@
                                 <?php
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
-                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
                                 ?>
-                                    <tr <?php if($id_karyawan==$SessionIdKaryawan){echo 'class="bg-info"';} ?>>
+                                    <tr <?php if($id_UMKM==$SessionIdUMKM){echo 'class="bg-info"';} ?>>
                                         <td class="text-center text-xs">
                                             <?php echo "$no" ?>
                                         </td>
@@ -143,7 +143,7 @@
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -208,16 +208,16 @@
                                 <?php
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
-                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
                                 ?>
-                                    <tr <?php if($id_karyawan==$SessionIdKaryawan){echo 'class="bg-info"';} ?>>
+                                    <tr <?php if($id_UMKM==$SessionIdUMKM){echo 'class="bg-info"';} ?>>
                                         <td class="text-center text-xs">
                                             <?php echo "$no" ?>
                                         </td>
@@ -233,7 +233,7 @@
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -260,11 +260,11 @@
                                             $id_kriteria= $data['id_kriteria'];
                                             //Arraykan Umkm
                                             $JumlahNormalisasi=0;
-                                            $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                            while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                                $id_karyawan= $DataKaryawan['id_karyawan'];
+                                            $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                            while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                                $id_UMKM= $DataUMKM['id_UMKM'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -289,11 +289,11 @@
                                             $id_kriteria= $data['id_kriteria'];
                                             //Arraykan Umkm
                                             $JumlahNormalisasi=0;
-                                            $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                            while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                                $id_karyawan= $DataKaryawan['id_karyawan'];
+                                            $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                            while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                                $id_UMKM= $DataUMKM['id_UMKM'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -366,16 +366,16 @@
                                 <?php
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
-                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
                                 ?>
-                                    <tr <?php if($id_karyawan==$SessionIdKaryawan){echo 'class="bg-info"';} ?>>
+                                    <tr <?php if($id_UMKM==$SessionIdUMKM){echo 'class="bg-info"';} ?>>
                                         <td class="text-center text-xs">
                                             <?php echo "$no" ?>
                                         </td>
@@ -395,7 +395,7 @@
                                                 $DataKriteria = mysqli_fetch_array($QryKriteria);
                                                 $bobot= $DataKriteria['bobot'];
                                                 //Buka nilai
-                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                                                $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
@@ -414,7 +414,7 @@
                                                 $NormalisasiTerbobot=$NilaiNormalisasi*$bobot;
                                                 $PembulatanNormalisasiTerbobot =round($NormalisasiTerbobot,2);
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 echo '<td align="right">';
                                                 echo '<span class="text-success">'.$PembulatanNormalisasiTerbobot.'</span><br>';
@@ -594,16 +594,16 @@
                                 <?php
                                     $no = 1;
                                     //KONDISI PENGATURAN MASING FILTER
-                                    $QryKaryawan = mysqli_query($Conn, "SELECT DISTINCT id_karyawan FROM nilai ORDER BY id_karyawan ASC");
-                                    while ($DataKaryawan = mysqli_fetch_array($QryKaryawan)) {
-                                        $id_karyawan= $DataKaryawan['id_karyawan'];
+                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM nilai ORDER BY id_UMKM ASC");
+                                    while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
+                                        $id_UMKM= $DataUMKM['id_UMKM'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
                                 ?>
-                                    <tr <?php if($id_karyawan==$SessionIdKaryawan){echo 'class="bg-info"';} ?>>
+                                    <tr <?php if($id_UMKM==$SessionIdUMKM){echo 'class="bg-info"';} ?>>
                                         <td class="text-center text-xs">
                                             <?php echo "$no" ?>
                                         </td>
@@ -623,7 +623,7 @@
                                                 $DataKriteria = mysqli_fetch_array($QryKriteria);
                                                 $bobot= $DataKriteria['bobot'];
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 $id_normalisasi_terbobot=$DataNormalisasiTerbobot['id_normalisasi_terbobot'];
                                                 $normalisasi_terbobot=$DataNormalisasiTerbobot['normalisasi_terbobot'];
@@ -655,7 +655,7 @@
                                                 $DataKriteria = mysqli_fetch_array($QryKriteria);
                                                 $bobot= $DataKriteria['bobot'];
                                                 //Buka nilai normalisasai_terbobot
-                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                                $QryNormalisasiTerbobot = mysqli_query($Conn,"SELECT * FROM normalisasi_terbobot WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                                 $DataNormalisasiTerbobot = mysqli_fetch_array($QryNormalisasiTerbobot);
                                                 $id_normalisasi_terbobot=$DataNormalisasiTerbobot['id_normalisasi_terbobot'];
                                                 $normalisasi_terbobot=$DataNormalisasiTerbobot['normalisasi_terbobot'];
@@ -682,7 +682,7 @@
                                             $Preferensi=$AkarJumlahPreferensiNegatif/$AkumulasiPositifNegatif;
                                             $PreferensiBulat=round($Preferensi,2);
                                             //cek apakah ada data preferensi
-                                            $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                            $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                             $DataPreferensi = mysqli_fetch_array($QryPreferensi);
                                             echo '<td align="right">';
                                             echo ''.$PreferensiBulat.'';
@@ -736,15 +736,15 @@
                                     //KONDISI PENGATURAN MASING FILTER
                                     $QryPreferensi = mysqli_query($Conn, "SELECT*FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY preferensi DESC");
                                     while ($DataPreferensi = mysqli_fetch_array($QryPreferensi)) {
-                                        $id_karyawan= $DataPreferensi['id_karyawan'];
+                                        $id_UMKM= $DataPreferensi['id_UMKM'];
                                         $preferensi= $DataPreferensi['preferensi'];
                                         //Buka detail umkm
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
+                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
                                         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
                                         $nama = $DataDetailAkses['nama'];
                                         $jabatan = $DataDetailAkses['jabatan'];
                                 ?>
-                                    <tr <?php if($id_karyawan==$SessionIdKaryawan){echo 'class="bg-info"';} ?>>
+                                    <tr <?php if($id_UMKM==$SessionIdUMKM){echo 'class="bg-info"';} ?>>
                                         <td class="text-center text-xs">
                                             <?php echo "$no" ?>
                                         </td>

@@ -22,8 +22,8 @@
                             if($Page=="MyProfile"){
                                 include "_Page/MyProfile/MyProfile.php";
                             }else{
-                                if($Page=="PenilaianKaryawan"){
-                                    include "_Page/PenilaianKaryawan/PenilaianKaryawan.php";
+                                if($Page=="PenilaianUMKM"){
+                                    include "_Page/PenilaianUMKM/PenilaianUMKM.php";
                                 }else{
                                     if($Page=="Help"){
                                         include "_Page/Help/Help.php";

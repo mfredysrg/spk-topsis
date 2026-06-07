@@ -20,8 +20,8 @@
         echo '<script type="text/javascript" src="_Page/Penilaian/Penilaian.js"></script>';
     } else if($Page == "Laporan"){
         echo '<script type="text/javascript" src="_Page/Laporan/Laporan.js"></script>';
-    } else if($Page == "PenilaianKaryawan"){
-        echo '<script type="text/javascript" src="_Page/PenilaianKaryawan/PenilaianKaryawan.js"></script>';
+    } else if($Page == "PenilaianUMKM"){
+        echo '<script type="text/javascript" src="_Page/PenilaianUMKM/PenilaianUMKM.js"></script>';
     } else if($Page == "MyProfile"){
         echo '<script type="text/javascript" src="_Page/MyProfile/MyProfile.js"></script>';
     }

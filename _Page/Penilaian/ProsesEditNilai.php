@@ -12,15 +12,15 @@
     if(empty($_POST['id_periode_penilaian'])){
         echo '<small class="text-danger">ID Periode Penilaian tidak boleh kosong</small>';
     }else{
-        //Validasi id_karyawan (yang dikirim dari form JS) tidak boleh kosong
-        if(empty($_POST['id_karyawan'])){
+        //Validasi id_UMKM (yang dikirim dari form JS) tidak boleh kosong
+        if(empty($_POST['id_UMKM'])){
             echo '<small class="text-danger">ID UMKM tidak boleh kosong</small>';
         }else{
             //Variabel
             $id_periode_penilaian=$_POST['id_periode_penilaian'];
             
-            // Variabel POST dari form tetap menggunakan 'id_karyawan', namun nilainya adalah ID UMKM
-            $id_umkm=$_POST['id_karyawan']; 
+            // Variabel POST dari form tetap menggunakan 'id_UMKM', namun nilainya adalah ID UMKM
+            $id_umkm=$_POST['id_UMKM']; 
             
             // [REVISI] Buka data dari tabel UMKM
             $QryDetailUMKM = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));

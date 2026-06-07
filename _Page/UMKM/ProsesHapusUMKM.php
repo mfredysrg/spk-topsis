@@ -2,11 +2,11 @@
     //Connection
     include "../../_Config/Connection.php";
     
-    // Tetap menangkap id_karyawan karena dikirim dari AJAX JS
-    if(empty($_POST['id_karyawan'])){
+    // Tetap menangkap id_UMKM karena dikirim dari AJAX JS
+    if(empty($_POST['id_UMKM'])){
         echo '<span class="text-danger">ID UMKM tidak dapat ditangkap oleh sistem</span>';
     }else{
-        $id_umkm = $_POST['id_karyawan'];
+        $id_umkm = $_POST['id_UMKM'];
         
         // [REVISI] Ambil id_akses dari tabel umkm
         $QryDetailUMKM = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
@@ -21,8 +21,8 @@
             $query2 = mysqli_query($Conn, "DELETE FROM umkm WHERE id_umkm='$id_umkm'") or die(mysqli_error($Conn));
             
             if ($query2) {
-                // ID NotifikasiHapusKaryawanBerhasil dibiarkan agar dibaca "Success" oleh file JS
-                echo '<span class="text-success" id="NotifikasiHapusKaryawanBerhasil">Success</span>';
+                // ID NotifikasiHapusUMKMBerhasil dibiarkan agar dibaca "Success" oleh file JS
+                echo '<span class="text-success" id="NotifikasiHapusUMKMBerhasil">Success</span>';
             }else{
                 echo '<span class="text-danger">Hapus Data UMKM Gagal</span>';
             }

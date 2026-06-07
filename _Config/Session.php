@@ -20,19 +20,19 @@
             $SessionAkses= $DataSessionAkses['akses'];
             
             // [REVISI SKRIPSI] Buka data UMKM sebagai pengganti tabel Umkm
-            $QrySessionKaryawan = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_akses='$SessionIdAkses'")or die(mysqli_error($Conn));
-            $DataSessionKaryawan = mysqli_fetch_array($QrySessionKaryawan);
+            $QrySessionUMKM = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_akses='$SessionIdAkses'")or die(mysqli_error($Conn));
+            $DataSessionUMKM = mysqli_fetch_array($QrySessionUMKM);
             
             // Cek berdasarkan id_umkm yang baru
-            if(!empty($DataSessionKaryawan['id_umkm'])){
+            if(!empty($DataSessionUMKM['id_umkm'])){
                 // Variabel session tetap bernama 'umkm' agar template sistem tidak error,
                 // Namun datanya secara cerdas mengambil dari tabel 'umkm' yang sudah direvisi
-                $SessionIdKaryawan= $DataSessionKaryawan['id_umkm'];
-                $SessionNip= $DataSessionKaryawan['nip'];
-                $SesonKontak= $DataSessionKaryawan['kontak'];
-                $SessionJabatan= $DataSessionKaryawan['nama_pemilik']; // Mengambil dari kolom nama_pemilik
+                $SessionIdUMKM= $DataSessionUMKM['id_umkm'];
+                $SessionNip= $DataSessionUMKM['nip'];
+                $SesonKontak= $DataSessionUMKM['kontak'];
+                $SessionJabatan= $DataSessionUMKM['nama_pemilik']; // Mengambil dari kolom nama_pemilik
             }else{
-                $SessionIdKaryawan="";
+                $SessionIdUMKM="";
                 $SessionNip="";
                 $SesonKontak="";
                 $SessionJabatan="";

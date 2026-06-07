@@ -129,20 +129,20 @@ INSERT INTO `divisi` (`id_divisi`, `nama_divisi`, `keterangan`) VALUES
 
 DROP TABLE IF EXISTS `umkm`;
 CREATE TABLE IF NOT EXISTS `umkm` (
-  `id_karyawan` int(15) NOT NULL AUTO_INCREMENT,
+  `id_UMKM` int(15) NOT NULL AUTO_INCREMENT,
   `id_akses` int(15) NOT NULL,
   `nama` text NOT NULL,
   `nip` varchar(25) NOT NULL,
   `kontak` varchar(25) NOT NULL,
   `jabatan` varchar(25) NOT NULL,
-  PRIMARY KEY (`id_karyawan`)
+  PRIMARY KEY (`id_UMKM`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `umkm`
 --
 
-INSERT INTO `umkm` (`id_karyawan`, `id_akses`, `nama`, `nip`, `kontak`, `jabatan`) VALUES
+INSERT INTO `umkm` (`id_UMKM`, `id_akses`, `nama`, `nip`, `kontak`, `jabatan`) VALUES
 (1, 4, 'Ujang Suherman', 'PPHH0001', '08960000001', 'Driver'),
 (2, 5, 'Sabil Kurniawan', 'PPHH0002', '08960000002', 'Driver'),
 (3, 6, 'Adung Sudiadi', 'PPHH0003', '08960000003', 'Driver'),
@@ -186,7 +186,7 @@ DROP TABLE IF EXISTS `nilai`;
 CREATE TABLE IF NOT EXISTS `nilai` (
   `id_nilai` int(15) NOT NULL AUTO_INCREMENT,
   `id_periode_penilaian` int(15) NOT NULL,
-  `id_karyawan` int(15) NOT NULL,
+  `id_UMKM` int(15) NOT NULL,
   `id_kriteria` int(15) NOT NULL,
   `nama` text NOT NULL,
   `kriteria` text NOT NULL,
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `nilai` (
 -- Dumping data for table `nilai`
 --
 
-INSERT INTO `nilai` (`id_nilai`, `id_periode_penilaian`, `id_karyawan`, `id_kriteria`, `nama`, `kriteria`, `nilai`) VALUES
+INSERT INTO `nilai` (`id_nilai`, `id_periode_penilaian`, `id_UMKM`, `id_kriteria`, `nama`, `kriteria`, `nilai`) VALUES
 (1, 1, 1, 1, 'Ujang Suherman', 'Kopetensi', 4),
 (2, 1, 1, 2, 'Ujang Suherman', 'Loyalitas', 3),
 (3, 1, 1, 3, 'Ujang Suherman', 'Tarbiyah', 2),
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `normalisasi_terbobot` (
   `id_normalisasi_terbobot` int(15) NOT NULL AUTO_INCREMENT,
   `id_periode_penilaian` int(15) NOT NULL,
   `id_kriteria` int(15) NOT NULL,
-  `id_karyawan` int(15) NOT NULL,
+  `id_UMKM` int(15) NOT NULL,
   `normalisasi_terbobot` varchar(20) NOT NULL,
   PRIMARY KEY (`id_normalisasi_terbobot`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `normalisasi_terbobot` (
 -- Dumping data for table `normalisasi_terbobot`
 --
 
-INSERT INTO `normalisasi_terbobot` (`id_normalisasi_terbobot`, `id_periode_penilaian`, `id_kriteria`, `id_karyawan`, `normalisasi_terbobot`) VALUES
+INSERT INTO `normalisasi_terbobot` (`id_normalisasi_terbobot`, `id_periode_penilaian`, `id_kriteria`, `id_UMKM`, `normalisasi_terbobot`) VALUES
 (1, 1, 1, 1, '20'),
 (2, 1, 2, 1, '11.25'),
 (3, 1, 3, 1, '3.33'),
@@ -367,7 +367,7 @@ DROP TABLE IF EXISTS `preferensi`;
 CREATE TABLE IF NOT EXISTS `preferensi` (
   `id_preferensi` int(15) NOT NULL AUTO_INCREMENT,
   `id_periode_penilaian` int(15) NOT NULL,
-  `id_karyawan` int(15) NOT NULL,
+  `id_UMKM` int(15) NOT NULL,
   `positif` varchar(15) NOT NULL,
   `negatif` varchar(15) NOT NULL,
   `preferensi` varchar(15) NOT NULL,
@@ -378,7 +378,7 @@ CREATE TABLE IF NOT EXISTS `preferensi` (
 -- Dumping data for table `preferensi`
 --
 
-INSERT INTO `preferensi` (`id_preferensi`, `id_periode_penilaian`, `id_karyawan`, `positif`, `negatif`, `preferensi`) VALUES
+INSERT INTO `preferensi` (`id_preferensi`, `id_periode_penilaian`, `id_UMKM`, `positif`, `negatif`, `preferensi`) VALUES
 (1, 1, 1, '6.03', '5', '0.45'),
 (2, 1, 2, '7.83', '6.67', '0.46'),
 (3, 1, 3, '6.01', '8.35', '0.58'),

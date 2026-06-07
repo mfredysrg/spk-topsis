@@ -4,10 +4,10 @@
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
     
-    //Tangkap id_karyawan (dari JS AJAX)
+    //Tangkap id_UMKM (dari JS AJAX)
     $id_umkm = "";
-    if(!empty($_POST['id_karyawan'])){
-        $id_umkm = $_POST['id_karyawan'];
+    if(!empty($_POST['id_UMKM'])){
+        $id_umkm = $_POST['id_UMKM'];
     } else if(!empty($_POST['id_umkm'])){
         $id_umkm = $_POST['id_umkm'];
     }
@@ -35,7 +35,7 @@
         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
         $email = $DataDetailAkses['email'];
 ?>
-    <input type="hidden" name="id_karyawan" id="id_karyawan" value="<?php echo "$id_umkm"; ?>">
+    <input type="hidden" name="id_UMKM" id="id_UMKM" value="<?php echo "$id_umkm"; ?>">
     <input type="hidden" name="id_akses" id="id_akses" value="<?php echo "$id_akses"; ?>">
     
     <div class="row">
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 mt-3" id="NotifikasiEditKaryawan">
+        <div class="col-md-12 mt-3" id="NotifikasiEditUMKM">
             <small class="text-primary">Pastikan data yang anda input sudah sesuai</small>
         </div>
     </div>

@@ -37,19 +37,19 @@
                                 </button>
                             </div>
                             <div class="col-md-2 mt-3">
-                                <button type="button" class="btn btn-md btn-info btn-block btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalFilterKaryawan">
+                                <button type="button" class="btn btn-md btn-info btn-block btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalFilterUMKM">
                                     <i class="bi bi-funnel"></i> Filter
                                 </button>
                             </div>
                             <div class="col-md-3 text-center mt-3">
-                                <button type="button" class="btn btn-md btn-primary btn-block btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalTambahKaryawan">
+                                <button type="button" class="btn btn-md btn-primary btn-block btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalTambahUMKM">
                                     <i class="bi bi-shop"></i> Tambah UMKM
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div id="MenampilkanTabelKaryawan">
+                <div id="MenampilkanTabelUMKM">
 
                 </div>
             </div>

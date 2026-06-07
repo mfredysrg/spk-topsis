@@ -39,7 +39,7 @@
                 $InsertUMKM = mysqli_query($Conn, "INSERT INTO umkm (id_akses, nama_umkm, nip, kontak, nama_pemilik) VALUES ('$id_akses', '$nama', '$nip', '$kontak', '$nama_pemilik')");
                 
                 if($InsertUMKM){
-                    echo '<span id="NotifikasiTambahKaryawanBerhasil">Success</span>';
+                    echo '<span id="NotifikasiTambahUMKMBerhasil">Success</span>';
                 } else {
                     // Jika gagal di tabel umkm, hapus data di tabel akses agar sinkron
                     mysqli_query($Conn, "DELETE FROM akses WHERE id_akses='$id_akses'");

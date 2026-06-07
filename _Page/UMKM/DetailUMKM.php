@@ -1,8 +1,8 @@
 <?php
     //Koneksi
     date_default_timezone_set('Asia/Jakarta');
-    //Tangkap id_karyawan
-    if(empty($_GET['id_karyawan'])){
+    //Tangkap id_UMKM
+    if(empty($_GET['id_UMKM'])){
         echo '<div class="card">';
         echo '  <div class="card-header">';
         echo '      <h4 class="card-title">Halaman Error</h4>';
@@ -19,19 +19,19 @@
         echo '  </div>';
         echo '</div>';
     }else{
-        $id_karyawan=$_GET['id_karyawan'];
+        $id_UMKM=$_GET['id_UMKM'];
         //Buka data umkm
-        $QryDetailKaryawan = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_karyawan='$id_karyawan'")or die(mysqli_error($Conn));
-        $DataKaryawan = mysqli_fetch_array($QryDetailKaryawan);
-        $id_akses= $DataKaryawan['id_akses'];
-        $nama= $DataKaryawan['nama'];
-        $kontak = $DataKaryawan['kontak'];
-        $jabatan= $DataKaryawan['jabatan'];
-        $nip= $DataKaryawan['nip'];
+        $QryDetailUMKM = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
+        $DataUMKM = mysqli_fetch_array($QryDetailUMKM);
+        $id_akses= $DataUMKM['id_akses'];
+        $nama= $DataUMKM['nama'];
+        $kontak = $DataUMKM['kontak'];
+        $jabatan= $DataUMKM['jabatan'];
+        $nip= $DataUMKM['nip'];
         $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM akses WHERE id_akses='$id_akses'")or die(mysqli_error($Conn));
         $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
         $email = $DataDetailAkses['email'];
-        $JumlahPeriode = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_periode_penilaian FROM nilai WHERE id_karyawan='$id_karyawan'"));
+        $JumlahPeriode = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_periode_penilaian FROM nilai WHERE id_UMKM='$id_UMKM'"));
 ?>
     <div class="card">
         <div class="card-header">
@@ -57,7 +57,7 @@
                     </div>
                     <div class="row mt-2"> 
                         <div class="col-md-5"><dt>ID Umkm</dt></div>
-                        <div class="col-md-7"><?php echo "$id_karyawan"; ?></div>
+                        <div class="col-md-7"><?php echo "$id_UMKM"; ?></div>
                     </div>
                     <div class="row mt-2"> 
                         <div class="col-md-5"><dt>NIP</dt></div>
@@ -120,7 +120,7 @@
                             <tbody>
                                 <?php
                                     $no = 1;
-                                    $QryNilai = mysqli_query($Conn, "SELECT DISTINCT id_periode_penilaian FROM nilai WHERE id_karyawan='$id_karyawan' ORDER BY id_periode_penilaian ASC");
+                                    $QryNilai = mysqli_query($Conn, "SELECT DISTINCT id_periode_penilaian FROM nilai WHERE id_UMKM='$id_UMKM' ORDER BY id_periode_penilaian ASC");
                                     while ($DataNilai = mysqli_fetch_array($QryNilai)) {
                                         $id_periode_penilaian= $DataNilai['id_periode_penilaian'];
                                         //Buka detail periode_penilaian
@@ -145,7 +145,7 @@
                                         </td>
                                         <td align="center">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalDetailPenilaianKaryawan" data-id="<?php echo "$id_periode_penilaian,$id_karyawan"; ?>">
+                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalDetailPenilaianUMKM" data-id="<?php echo "$id_periode_penilaian,$id_UMKM"; ?>">
                                                     <i class="bi bi-three-dots-vertical"></i> Selengkapnya
                                                 </button>  
                                             </div>

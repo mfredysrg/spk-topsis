@@ -1,7 +1,7 @@
-<div class="modal fade" id="ModalFilterKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalFilterUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <form action="javascript:void(0);" id="ProsesFilterKaryawan">
+            <form action="javascript:void(0);" id="ProsesFilterUMKM">
                 <div class="modal-header bg-info">
                     <h5 class="modal-title text-light"><i class="bi bi-funnel"></i> Filter Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -69,15 +69,15 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalTambahKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalTambahUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <form action="javascript:void(0);" id="ProsesTambahKaryawan">
+            <form action="javascript:void(0);" id="ProsesTambahUMKM">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Tambah Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="FormTambahKaryawan">
+                <div class="modal-body" id="FormTambahUMKM">
                     
                 </div>
                 <div class="modal-footer bg-primary">
@@ -92,28 +92,28 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalDetailKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalDetailUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title text-light"><i class="bi bi-person-fill"></i> Detail Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="FormDetailKaryawan">
+            <div id="FormDetailUMKM">
                 
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalEditKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalEditUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <form action="javascript:void(0);" id="ProsesEditKaryawan">
+            <form action="javascript:void(0);" id="ProsesEditUMKM">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-light"><i class="bi bi-person-plus"></i> Edit Umkm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="FormEditKaryawan">
+                <div class="modal-body" id="FormEditUMKM">
                     
                 </div>
                 <div class="modal-footer bg-primary">
@@ -151,18 +151,18 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalDeleteKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalDeleteUMKM" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-danger">
                 <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Hapus Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="FormDeleteKaryawan">
+            <div class="modal-body" id="FormDeleteUMKM">
                 
             </div>
             <div class="modal-footer bg-danger">
-                <button type="button" class="btn btn-success btn-rounded" id="KonfirmasiHapusKaryawan">
+                <button type="button" class="btn btn-success btn-rounded" id="KonfirmasiHapusUMKM">
                     <i class="bi bi-check"></i> Ya
                 </button>
                 <button type="button" class="btn btn-dark btn-rounded" data-bs-dismiss="modal">
@@ -172,40 +172,40 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalUnitKerjaKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalUnitKerjaUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title text-light"><i class="bi bi-building"></i> Unit Kerja</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="DetailKaryawanUnitkerja">
+            <div id="DetailUMKMUnitkerja">
                 
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalDukunganKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalDukunganUMKM" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title text-light"><i class="bi bi-hammer"></i> Dukungan Teknis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="DetailDukunganKaryawan">
+            <div id="DetailDukunganUMKM">
                 
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalDetailPenilaianKaryawan" tabindex="-1">
+<div class="modal fade" id="ModalDetailPenilaianUMKM" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title text-light"><i class="bi bi-trash"></i> Detail Penilaian Umkm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="FormDetailPenilaianKaryawan">
+            <div class="modal-body" id="FormDetailPenilaianUMKM">
                 
             </div>
             <div class="modal-footer bg-primary">

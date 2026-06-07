@@ -63,7 +63,7 @@
                                 echo '  </ol>';
                                 echo '</nav>';
                             }else{
-                                if($_GET['Page']=="PenilaianKaryawan"){
+                                if($_GET['Page']=="PenilaianUMKM"){
                                     echo '<h1><i class="bi bi-question-circle"></i> Penilaian Umkm</h1>';
                                     echo '<nav>';
                                     echo '  <ol class="breadcrumb">';

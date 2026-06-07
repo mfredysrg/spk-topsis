@@ -21,7 +21,7 @@
     </div>
     <div class="col-md-6 mt-3">
         <label for="bobot">Bobot</label>
-        <input type="number" min="0" name="bobot" id="bobot" class="form-control">
+        <input type="number" name="bobot" class="form-control" step="0.0001" required>
     </div>
 </div>
 <div class="row">

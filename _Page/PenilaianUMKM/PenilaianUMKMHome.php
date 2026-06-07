@@ -38,7 +38,7 @@
                                 </button>
                             </div>
                             <div class="col-md-5 text-end mt-3">
-                                <button type="button" class="btn btn-md btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalTambahKaryawan">
+                                <button type="button" class="btn btn-md btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#ModalTambahUMKM">
                                     <i class="bi bi-plus-circle"></i> Tambah UMKM
                                 </button>
                             </div>
@@ -78,13 +78,13 @@
                                         <td><?php echo $nama_pemilik; ?></td>
                                         <td><?php echo $kontak; ?></td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-info" title="Detail" data-bs-toggle="modal" data-bs-target="#ModalDetailKaryawan" data-id="<?php echo $id_umkm; ?>">
+                                            <button class="btn btn-sm btn-info" title="Detail" data-bs-toggle="modal" data-bs-target="#ModalDetailUMKM" data-id="<?php echo $id_umkm; ?>">
                                                 <i class="bi bi-info-circle"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-success" title="Edit" data-bs-toggle="modal" data-bs-target="#ModalEditKaryawan" data-id="<?php echo $id_umkm; ?>">
+                                            <button class="btn btn-sm btn-success" title="Edit" data-bs-toggle="modal" data-bs-target="#ModalEditUMKM" data-id="<?php echo $id_umkm; ?>">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-danger" title="Hapus" data-bs-toggle="modal" data-bs-target="#ModalHapusKaryawan" data-id="<?php echo $id_umkm; ?>">
+                                            <button class="btn btn-sm btn-danger" title="Hapus" data-bs-toggle="modal" data-bs-target="#ModalHapusUMKM" data-id="<?php echo $id_umkm; ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>

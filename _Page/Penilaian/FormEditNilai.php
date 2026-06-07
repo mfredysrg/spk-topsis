@@ -12,8 +12,8 @@
         echo '      </div>';
         echo '  </div>';
     }else{
-        // [REVISI] Mengubah tangkapan dari id_karyawan ke id_umkm
-        if(empty($_POST['id_karyawan'])){ // Tetap pakai id_karyawan untuk menangkap POST dari JS agar tidak perlu ubah banyak di JS
+        // [REVISI] Mengubah tangkapan dari id_UMKM ke id_umkm
+        if(empty($_POST['id_UMKM'])){ // Tetap pakai id_UMKM untuk menangkap POST dari JS agar tidak perlu ubah banyak di JS
             echo '  <div class="row">';
             echo '      <div class="col-md-12 mb-3">';
             echo '          ID UMKM Tidak Ditemukan.';
@@ -21,8 +21,8 @@
             echo '  </div>';
         }else{
             $id_periode_penilaian=$_POST['id_periode_penilaian'];
-            // Variabel POST dari JS masih 'id_karyawan', kita ubah namanya menjadi id_umkm di PHP
-            $id_umkm=$_POST['id_karyawan']; 
+            // Variabel POST dari JS masih 'id_UMKM', kita ubah namanya menjadi id_umkm di PHP
+            $id_umkm=$_POST['id_UMKM']; 
             
             //Buka data periode penilaian
             $QryPeriodePenilaian = mysqli_query($Conn,"SELECT * FROM periode_penilaian WHERE id_periode_penilaian='$id_periode_penilaian'")or die(mysqli_error($Conn));
@@ -47,7 +47,7 @@
             $email = !empty($DataDetailAkses['email']) ? $DataDetailAkses['email'] : 'Tidak Ada Email';
 ?>
     <input type="hidden" name="id_periode_penilaian" id="id_periode_penilaian" value="<?php echo "$id_periode_penilaian"; ?>">
-    <input type="hidden" name="id_karyawan" id="id_karyawan" value="<?php echo "$id_umkm"; ?>">
+    <input type="hidden" name="id_UMKM" id="id_UMKM" value="<?php echo "$id_umkm"; ?>">
     
     <div class="row mb-3"> 
         <div class="col-md-12">
