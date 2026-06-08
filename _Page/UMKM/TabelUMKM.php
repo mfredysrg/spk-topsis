@@ -74,7 +74,7 @@
         var OrderBy = "<?php echo $OrderBy; ?>";
         var ShortBy = "<?php echo $ShortBy; ?>";
         $.ajax({
-            url     : "_Page/Umkm/TabelUMKM.php",
+            url     : "_Page/UMKM/TabelUMKM.php",
             method  : "POST",
             data    :  { page: valueNext, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success: function (data) {
@@ -91,7 +91,7 @@
         var OrderBy = "<?php echo $OrderBy; ?>";
         var ShortBy = "<?php echo $ShortBy; ?>";
         $.ajax({
-            url     : "_Page/Umkm/TabelUMKM.php",
+            url     : "_Page/UMKM/TabelUMKM.php",
             method  : "POST",
             data    :  { page: ValuePrev, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
             success : function (data) {
@@ -112,7 +112,7 @@
             var OrderBy = "<?php echo $OrderBy; ?>";
             var ShortBy = "<?php echo $ShortBy; ?>";
             $.ajax({
-                url     : "_Page/Umkm/TabelUMKM.php",
+                url     : "_Page/UMKM/TabelUMKM.php",
                 method  : "POST",
                 data    :  { page: PageNumber, batas: batas, keyword: keyword, keyword_by: keyword_by, OrderBy: OrderBy, ShortBy: ShortBy },
                 success: function (data) {
