@@ -46,7 +46,7 @@
     </div>
     <div class="row">
         <div class="col-md-6 mt-3">
-            <label for="nip">NIP / ID Lainnya</label>
+            <label for="nip">Lokasi Usaha</label>
             <input type="text" name="nip" id="nip" class="form-control" value="<?php echo "$nip"; ?>">
         </div>
         <div class="col-md-6 mt-3">
@@ -60,7 +60,7 @@
             <input type="text" name="kontak" id="kontak" class="form-control" value="<?php echo "$kontak"; ?>">
         </div>
         <div class="col-md-6 mt-3">
-            <label for="jabatan">Nama Pemilik / Jabatan</label>
+            <label for="jabatan">Nama Pemilik Usaha</label>
             <input type="text" name="jabatan" id="jabatan" class="form-control" value="<?php echo "$nama_pemilik"; ?>">
         </div>
     </div>

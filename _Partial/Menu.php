@@ -32,14 +32,20 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link <?php if($PageMenu!=="BobotKriteria"){echo "collapsed";} ?>" href="index.php?Page=BobotKriteria">
+                    <i class="bi bi-sliders"></i>
+                    <span>Bobot Kriteria</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link <?php if($PageMenu!=="Kriteria"){echo "collapsed";} ?>" href="index.php?Page=Kriteria">
-                    <i class="bi bi-list-columns"></i>
+                    <i class="bi bi-list colums"></i>
                     <span>Kriteria</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php if($PageMenu!=="Penilaian"){echo "collapsed";} ?>" href="index.php?Page=Penilaian">
-                    <i class="bi bi-list-check"></i>
+                    <i class="bi bi-clipboard-check"></i>
                     <span>Penilaian</span>
                 </a>
             </li>

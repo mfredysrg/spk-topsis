@@ -14,7 +14,9 @@
         } else {
             echo "<script>alert('ALARM ERROR: File Javascript tidak ditemukan! Pastikan nama filenya UMKM.js atau Umkm.js di dalam folder _Page/UMKM/');</script>";
         }
-    } else if($Page == "Kriteria"){
+    } else if($Page == "BobotKriteria"){
+        echo '<script type="text/javascript" src="_Page/BobotKriteria/BobotKriteria.js"></script>';
+    }else if($Page == "Kriteria"){
         echo '<script type="text/javascript" src="_Page/Kriteria/Kriteria.js"></script>';
     } else if($Page == "Penilaian"){
         echo '<script type="text/javascript" src="_Page/Penilaian/Penilaian.js"></script>';

@@ -8,7 +8,7 @@
     }else if(empty($_POST['nama'])){
         echo '<small class="text-danger">Nama tidak boleh kosong</small>';
     }else if(empty($_POST['nip'])){
-        echo '<small class="text-danger">NIP / ID Lainnya tidak boleh kosong</small>';
+        echo '<small class="text-danger">Lokasi Usaha tidak boleh kosong</small>';
     }else if(empty($_POST['kontak'])){
         echo '<small class="text-danger">Kontak tidak boleh kosong</small>';
     }else if(empty($_POST['email'])){

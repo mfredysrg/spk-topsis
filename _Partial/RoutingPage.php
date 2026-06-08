@@ -10,26 +10,30 @@
             if($Page=="UMKM"){
                 include "_Page/UMKM/UMKM.php";
             }else{
-                if($Page=="Kriteria"){
-                    include "_Page/Kriteria/Kriteria.php";
+                if($Page=="BobotKriteria"){
+                    include "_Page/BobotKriteria/BobotKriteria.php";
                 }else{
-                    if($Page=="Penilaian"){
-                        include "_Page/Penilaian/Penilaian.php";
+                    if($Page=="Kriteria"){
+                        include "_Page/Kriteria/Kriteria.php";
                     }else{
-                        if($Page=="Laporan"){
-                            include "_Page/Laporan/Laporan.php";
-                        }else{
-                            if($Page=="MyProfile"){
-                                include "_Page/MyProfile/MyProfile.php";
+                        if($Page=="Penilaian"){
+                            include "_Page/Penilaian/Penilaian.php";
                             }else{
-                                if($Page=="PenilaianUMKM"){
-                                    include "_Page/PenilaianUMKM/PenilaianUMKM.php";
+                            if($Page=="Laporan"){
+                                include "_Page/Laporan/Laporan.php";
                                 }else{
-                                    if($Page=="Help"){
-                                        include "_Page/Help/Help.php";
+                                    if($Page=="MyProfile"){
+                                        include "_Page/MyProfile/MyProfile.php";
                                     }else{
-                                        // JIKA RUTE TIDAK DIKENALI, KEMBALI KE DASHBOARD
-                                        include "_Page/Dashboard/Dashboard.php";
+                                        if($Page=="PenilaianUMKM"){
+                                            include "_Page/PenilaianUMKM/PenilaianUMKM.php";
+                                        }else{
+                                            if($Page=="Help"){
+                                                include "_Page/Help/Help.php";
+                                            }else{
+                                                // JIKA RUTE TIDAK DIKENALI, KEMBALI KE DASHBOARD
+                                                include "_Page/Dashboard/Dashboard.php";
+                                        }
                                     }
                                 }
                             }
