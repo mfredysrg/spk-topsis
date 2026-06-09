@@ -518,7 +518,7 @@
                                                         echo '<td align="right">';
                                                         echo '<span class="text-success">'.$PembulatanNormalisasiTerbobot.'</span><br>';
                                                         echo '<small>Xij = '.$nilai.'</small><br>';
-                                                        echo '<small>&#8730;(&#8721;i-1) = '.$sqrt_normalisasi.'</small><br>';
+                                                        echo '<small>$mpdf->WriteHTML(mb_convert_encoding($html,'UTF-8')); = '.$sqrt_normalisasi.'</small><br>';
                                                         echo '</td>';
                                                     }else{
                                                         echo '<td align="right" class="text-danger">Error</td>';
@@ -533,7 +533,7 @@
                                                         echo '<td align="right">';
                                                         echo '<span class="text-success">'.$PembulatanNormalisasiTerbobot.'</span><br>';
                                                         echo '<small>Xij = '.$nilai.'</small><br>';
-                                                        echo '<small>&#8730;(&#8721;i-1) = '.$sqrt_normalisasi.'</small><br>';
+                                                        echo '<small>$mpdf->WriteHTML(mb_convert_encoding($html,'UTF-8')); = '.$sqrt_normalisasi.'</small><br>';
                                                         echo '</td>';
                                                     }else{
                                                         echo '<small class="text-danger">Error</small>';

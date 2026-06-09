@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="alert alert-info alert-dismissible fade show" role="alert"> 
                 <small>
-                    Halaman akses ini berfungsi untuk mengelola data akses pengguna aplikasi HRD dan Pimpinan.
+                    Halaman akses ini berfungsi untuk mengelola data akses pengguna aplikasi Administrator dan Pimpinan.
                     Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan data akses pengguna, kemudian isi form dengan benar. 
                 </small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

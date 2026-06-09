@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="alert alert-info alert-dismissible fade show" role="alert"> 
                 <small>
-                    Halaman kriteria ini berfungsi untuk mengelola data kriteria penilaian kinerja Kriteria khusus oleh HRD.
+                    Halaman kriteria ini berfungsi untuk mengelola data kriteria penilaian kinerja Kriteria khusus oleh Administrator.
                     Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan data kriteria. 
                 </small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

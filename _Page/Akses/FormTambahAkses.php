@@ -13,7 +13,7 @@
         <label for="akses">Akses</label>
         <select name="akses" id="akses" class="form-control">
             <option value="">Pilih..</option>
-            <option value="HRD">HRD</option>
+            <option value="HRD">Administrator</option>
             <option value="Pimpinan">Pimpinan</option>
         </select>
     </div>

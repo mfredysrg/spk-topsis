@@ -14,7 +14,7 @@
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
                                         <div class="accordion-body"> 
-                                            Hak akses <strong>HRD</strong> memiliki tugas untuk mengelola data akses untuk pimpinan. 
+                                            Hak akses <strong>Administrator</strong> memiliki tugas untuk mengelola data akses untuk pimpinan. 
                                             Salah satu fitur kelola akses adalah menambahkan data akses baru. Berikut langkah-langkah 
                                             untuk menambahkan data akses baru:<br>
                                             <ul>
@@ -44,7 +44,7 @@
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body"> 
                                             Data umkm adalah objek yang akan dilakukan penilaian. 
-                                            Oleh sebab itu data umkm harus diinput terlebih dulu oleh HRD. Berikut ini
+                                            Oleh sebab itu data umkm harus diinput terlebih dulu oleh Administrator. Berikut ini
                                             langkah-langkah untuk menambahkan data umkm :
                                             <ul>
                                                 <li>
@@ -73,7 +73,7 @@
                                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                         <div class="accordion-body"> 
                                             Data kriteria penilaian adalah instrumen yang akan dilakukan penilaian. 
-                                            Oleh sebab itu data penilaian berikut atribut, bobot dan alternatif jawaban harus diinput terlebih dulu oleh HRD. Berikut ini
+                                            Oleh sebab itu data penilaian berikut atribut, bobot dan alternatif jawaban harus diinput terlebih dulu oleh Administrator. Berikut ini
                                             langkah-langkah untuk menambahkan data kriteria penilaian :
                                             <ul>
                                                 <li>

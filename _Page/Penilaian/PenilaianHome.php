@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="alert alert-info alert-dismissible fade show" role="alert"> 
                 <small>
-                    Halaman Penilaian ini berfungsi untuk mengelola data Penilaian kinerja umkm khusus oleh HRD.
+                    Halaman Penilaian ini berfungsi untuk mengelola data Penilaian kinerja umkm khusus oleh Administrator.
                     Silahkan gunakan tombol <b>Tambah</b> untuk menambahkan Sesi Penilaian kemudian buka detail sesi untuk mengelola hasil penilaian. 
                 </small>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

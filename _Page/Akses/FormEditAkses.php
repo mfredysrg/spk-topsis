@@ -36,7 +36,7 @@
             <label for="akses">Akses</label>
             <select name="akses" id="akses" class="form-control">
                 <option <?php if($akses==""){echo "selected";} ?> value="">Pilih..</option>
-                <option <?php if($akses=="HRD"){echo "selected";} ?> value="HRD">HRD</option>
+                <option <?php if($akses=="HRD"){echo "selected";} ?> value="HRD">Administrator</option>
                 <option <?php if($akses=="Pimpinan"){echo "selected";} ?> value="Pimpinan">Pimpinan</option>
             </select>
         </div>
