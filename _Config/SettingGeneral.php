@@ -5,7 +5,7 @@
     $alamat_bisnis="Lhokseumawe";
     $email_bisnis="mfredyansyahsiregar@gmail.com";
     $telepon_bisnis="081376255613";
-    $favicon="husnul.png";
-    $logo="husnul.png";
+    $favicon="fredy.png";
+    $logo="fredy.png";
     $base_url="http://localhost:81/Husnul/";
 ?>

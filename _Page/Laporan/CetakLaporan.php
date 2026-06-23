@@ -249,7 +249,7 @@
                                                 if($status=="Proses"){
                                                     $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_UMKM ASC");
                                                 }else{
-                                                    $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_UMKM FROM periode_penilaian ORDER BY id_UMKM ASC");
+                                                    $QryUMKM = mysqli_query($Conn,"SELECT DISTINCT id_UMKM FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY id_UMKM ASC");
                                                 }
                                                 while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
                                                     $id_UMKM= $DataUMKM['id_UMKM'];
@@ -490,11 +490,16 @@
                                                 $QryNormalisasi = mysqli_query($Conn,"SELECT * FROM normalisasi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNormalisasi = mysqli_fetch_array($QryNormalisasi);
                                                 if(empty($DataNormalisasi['sqrt_normalisasi'])){
-                                                    $sqrt_normalisasi =0;
+                                                    $sqrt_normalisasi = 0;
                                                 }else{
-                                                    $sqrt_normalisasi =$DataNormalisasi['sqrt_normalisasi'];
+                                                    $sqrt_normalisasi = $DataNormalisasi['sqrt_normalisasi'];
                                                 }
-                                                $NilaiNormalisasi=$nilai/$sqrt_normalisasi;
+
+                                                if($sqrt_normalisasi > 0){
+                                                    $NilaiNormalisasi = $nilai / $sqrt_normalisasi;
+                                                }else{
+                                                    $NilaiNormalisasi = 0;
+                                                }
                                                 $NormalisasiTerbobot=$NilaiNormalisasi*$bobot;
                                                 $PembulatanNormalisasiTerbobot =round($NormalisasiTerbobot,2);
                                                 //Buka nilai normalisasai_terbobot
@@ -518,7 +523,7 @@
                                                         echo '<td align="right">';
                                                         echo '<span class="text-success">'.$PembulatanNormalisasiTerbobot.'</span><br>';
                                                         echo '<small>Xij = '.$nilai.'</small><br>';
-                                                        echo '<small>$mpdf->WriteHTML(mb_convert_encoding($html,'UTF-8')); = '.$sqrt_normalisasi.'</small><br>';
+                                                        echo '<small>SQRT = '.$sqrt_normalisasi.'</small><br>';
                                                         echo '</td>';
                                                     }else{
                                                         echo '<td align="right" class="text-danger">Error</td>';
@@ -533,7 +538,7 @@
                                                         echo '<td align="right">';
                                                         echo '<span class="text-success">'.$PembulatanNormalisasiTerbobot.'</span><br>';
                                                         echo '<small>Xij = '.$nilai.'</small><br>';
-                                                        echo '<small>$mpdf->WriteHTML(mb_convert_encoding($html,'UTF-8')); = '.$sqrt_normalisasi.'</small><br>';
+                                                        echo '<small>SQRT = '.$sqrt_normalisasi.'</small><br>';
                                                         echo '</td>';
                                                     }else{
                                                         echo '<small class="text-danger">Error</small>';
@@ -887,8 +892,17 @@
                                             echo '</td>';
 
                                             //Menambahkan positif dan negatif
-                                            $AkumulasiPositifNegatif=$AkarJumlahPreferensiNegatif+$AkarJumlahPreferensiPositif;
-                                            $Preferensi=$AkarJumlahPreferensiNegatif/$AkumulasiPositifNegatif;
+                                            $AkumulasiPositifNegatif =
+                                            $AkarJumlahPreferensiNegatif +
+                                            $AkarJumlahPreferensiPositif;
+
+                                        if($AkumulasiPositifNegatif > 0){
+                                            $Preferensi =
+                                                $AkarJumlahPreferensiNegatif /
+                                                $AkumulasiPositifNegatif;
+                                        }else{
+                                            $Preferensi = 0;
+                                        }
                                             $PreferensiBulat=round($Preferensi,2);
                                             //cek apakah ada data preferensi
                                             $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_UMKM='$id_UMKM'")or die(mysqli_error($Conn));
@@ -1017,7 +1031,7 @@
     if($FormatCetak=="PDF"){
         $html = ob_get_contents();
         ob_end_clean();
-        $mpdf->WriteHTML(utf8_encode($html));
+        $mpdf->WriteHTML($html);
         $mpdf->Output($nama_dokumen.".pdf" ,'I');
         exit;
     }
