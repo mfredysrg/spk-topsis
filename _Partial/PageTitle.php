@@ -28,13 +28,6 @@
                 echo '</nav>';
             }else{
                 if($_GET['Page']=="BobotKriteria"){
-                    echo '<h1><i class="bi bi-sliders"></i> BobotKriteria</h1>';
-                    echo '<nav>';
-                    echo '  <ol class="breadcrumb">';
-                    echo '      <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>';
-                    echo '      <li class="breadcrumb-item active">BobotKriteria</li>';
-                    echo '  </ol>';
-                    echo '</nav>';
                 }else{
                     if($_GET['Page']=="Kriteria"){
                         echo '<h1><i class="bi bi-list-check"></i> Kriteria</h1>';
@@ -90,13 +83,15 @@
                                             echo '  </ol>';
                                             echo '</nav>';
                                         }else{
+                                        if($_GET['Page']=="PerbandinganKriteria"){
+                                        }
+                                        else{
                                             echo '<h1>Error Page</h1>';
                                             echo '<nav>';
                                             echo '  <ol class="breadcrumb">';
                                             echo '      <li class="breadcrumb-item active">Error Page</li>';
                                             echo '  </ol>';
-                                            echo '</nav>';
-                                            
+                                            echo '</nav>';  
                                         }             
                                     }
                                 }                        
@@ -106,6 +101,6 @@
                 }
             }
         }
-    }    
+    }  }  
 echo '</div>';
 ?>
