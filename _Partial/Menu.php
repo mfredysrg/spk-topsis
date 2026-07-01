@@ -18,6 +18,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
+
         <?php if($SessionAkses=="HRD"){ ?>
             <li class="nav-item">
                 <a class="nav-link <?php if($PageMenu!=="Akses"){echo "collapsed";} ?>" href="index.php?Page=Akses">
@@ -50,7 +51,14 @@
                 </a>
             </li>
         <?php } ?>
-        <?php if($SessionAkses=="Pimpinan"){ ?>
+
+        <?php if($SessionAkses=="Pimpinan" || $SessionAkses=="Kadiv"){ ?>
+            <li class="nav-item">
+                <a class="nav-link <?php if($PageMenu=="PerbandinganKriteria"){echo "active";}else{echo "collapsed";} ?>" href="index.php?Page=PerbandinganKriteria">
+                    <i class="bi bi-diagram-3"></i>
+                    <span>Perbandingan Kriteria</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link <?php if($PageMenu!=="Laporan"){echo "collapsed";} ?>" href="index.php?Page=Laporan">
                     <i class="bi bi-bar-chart"></i>
@@ -58,6 +66,7 @@
                 </a>
             </li>
         <?php } ?>
+
         <?php if($SessionAkses=="UMKM"){ ?>
             <li class="nav-item">
                 <a class="nav-link <?php if($PageMenu!=="PenilaianUMKM"){echo "collapsed";} ?>" href="index.php?Page=PenilaianUMKM">
@@ -66,6 +75,7 @@
                 </a>
             </li>
         <?php } ?>
+
         <li class="nav-item">
             <a class="nav-link <?php if($PageMenu!=="Help"){echo "collapsed";} ?>" href="index.php?Page=Help&Sub=HelpData">
                 <i class="bi bi-question"></i>
@@ -79,4 +89,4 @@
             </a>
         </li>
     </ul>
-</aside>  
+</aside>
