@@ -55,7 +55,7 @@
                                                     form tambah data umkm baru.
                                                 </li>
                                                 <li>
-                                                    Isi nama umkm, NIP, Kontak, Jabatan, , alamat email, dan password.
+                                                    Isi nama umkm, Pemilik, Kontak, Lokasi, , alamat email, dan password.
                                                 </li>
                                                 <li>
                                                     Klik pada tombol <b>Simpan</b>, apabila berhasil sistem akan menampilkan notifikasi.
@@ -67,7 +67,7 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree"> 
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> 
-                                            3. Tambaa Data Kriteria
+                                            3. Tambah Data Kriteria
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">

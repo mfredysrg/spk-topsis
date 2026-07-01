@@ -1,30 +1,38 @@
+// ===============================================
+// 1. MEMUAT TABEL KRITERIA
+// ===============================================
 $('#MenampilkanTabelKriteria').html("Loading...");
 $('#MenampilkanTabelKriteria').load("_Page/Kriteria/TabelKriteria.php");
+
 $('#batas').change(function(){
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelKriteria').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/TabelKriteria.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/Kriteria/TabelKriteria.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelKriteria').html(data);
         }
     });
 });
-$('#ProsesBatas').submit(function(){
+
+$('#ProsesBatas').submit(function(e){
+    e.preventDefault();
     var ProsesBatas = $('#ProsesBatas').serialize();
     $('#MenampilkanTabelKriteria').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/TabelKriteria.php',
-        data 	    :  ProsesBatas,
+        type        : 'POST',
+        url         : '_Page/Kriteria/TabelKriteria.php',
+        data        :  ProsesBatas,
         success     : function(data){
             $('#MenampilkanTabelKriteria').html(data);
         }
     });
 });
-$('#ProsesFilterKriteria').submit(function(){
+
+$('#ProsesFilterKriteria').submit(function(e){
+    e.preventDefault();
     var batas = $('#FilterBatas').val();
     var OrderBy = $('#OrderBy').val();
     var ShortBy = $('#ShortBy').val();
@@ -32,142 +40,131 @@ $('#ProsesFilterKriteria').submit(function(){
     var FilterKeyword = $('#FilterKeyword').val();
     $('#MenampilkanTabelKriteria').html('Loading...');
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/TabelKriteria.php',
-        data 	    :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
+        type        : 'POST',
+        url         : '_Page/Kriteria/TabelKriteria.php',
+        data        :  {batas: batas, OrderBy: OrderBy, ShortBy: ShortBy, KeywordBy: KeywordBy, keyword: FilterKeyword},
         success     : function(data){
             $('#MenampilkanTabelKriteria').html(data);
             $('#ModalFilterKriteria').modal('hide');
         }
     });
 });
-//Tambah Kriteria
+
+// ===============================================
+// 2. MODAL & PROSES TAMBAH KRITERIA
+// ===============================================
 $('#ModalTambahKriteria').on('show.bs.modal', function (e) {
     $('#FormTambahKriteria').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormTambahKriteria.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormTambahKriteria.php',
         success     : function(data){
             $('#FormTambahKriteria').html(data);
-            //Proses Tambah Kriteria
-            $('#ProsesTambahKriteria').submit(function(){
-                $('#NotifikasiTambahKriteria').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
-                var form = $('#ProsesTambahKriteria')[0];
-                var data = new FormData(form);
-                $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesTambahKriteria.php',
-                    data 	    :  data,
-                    cache       : false,
-                    processData : false,
-                    contentType : false,
-                    enctype     : 'multipart/form-data',
-                    success     : function(data){
-                        $('#NotifikasiTambahKriteria').html(data);
-                        var NotifikasiTambahKriteriaBerhasil=$('#NotifikasiTambahKriteriaBerhasil').html();
-                        if(NotifikasiTambahKriteriaBerhasil=="Success"){
-                            location.reload();
-                        }
-                    }
-                });
-            });
         }
     });
 });
-//Edit Kriteria
+
+$(document).on('submit', '#ProsesTambahKriteria', function(e) {
+    e.preventDefault();
+    $('#NotifikasiTambahKriteria').html('<span class="text-info">Sedang menyimpan data...</span>');
+    
+    $.ajax({
+        type        : 'POST',
+        url         : '_Page/Kriteria/ProsesTambahKriteria.php',
+        data        : new FormData(this),
+        contentType : false,
+        cache       : false,
+        processData : false,
+        success     : function(response){
+            $('#NotifikasiTambahKriteria').html(response);
+            
+            // JIKA SUKSES
+            if(response.includes("Success") || response.includes("Berhasil")){
+                $('#ModalTambahKriteria').modal('hide');
+                Swal.fire('Berhasil!', 'Data Kriteria Berhasil Ditambahkan', 'success').then(function(){
+                    location.reload(); 
+                });
+            }
+        }
+    });
+});
+
+
+// ===============================================
+// 3. MODAL & PROSES EDIT KRITERIA
+// ===============================================
 $('#ModalEditKriteria').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
     var id_kriteria = pecah[0];
-    var keyword = pecah[1];
-    var batas = pecah[2];
-    var ShortBy = pecah[3];
-    var OrderBy = pecah[4];
-    var page = pecah[5];
-    var posisi = pecah[6];
-    var keyword_by = pecah[7];
+
     $('#FormEditKriteria').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormEditKriteria.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormEditKriteria.php',
         data        : {id_kriteria: id_kriteria},
         success     : function(data){
             $('#FormEditKriteria').html(data);
-            //Proses Edit Kriteria
-            $('#ProsesEditKriteria').submit(function(){
-                $('#NotifikasiEditKriteria').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
-                var form = $('#ProsesEditKriteria')[0];
-                var data = new FormData(form);
-                $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesEditKriteria.php',
-                    data 	    :  data,
-                    cache       : false,
-                    processData : false,
-                    contentType : false,
-                    enctype     : 'multipart/form-data',
-                    success     : function(data){
-                        $('#NotifikasiEditKriteria').html(data);
-                        var NotifikasiEditKriteriaBerhasil=$('#NotifikasiEditKriteriaBerhasil').html();
-                        if(NotifikasiEditKriteriaBerhasil=="Success"){
-                            $('#MenampilkanTabelKriteria').html("Loading...");
-                            $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Kriteria/TabelKriteria.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
-                                success     : function(data){
-                                    $('#MenampilkanTabelKriteria').html(data);
-                                    $('#ModalEditKriteria').modal('hide');
-                                    swal("Good Job!", "Edit Kriteria Berhasil!", "success");
-                                }
-                            });
-                        }
-                    }
-                });
-            });
         }
     });
 });
-//Hapus Kriteria
+
+$(document).on('submit', '#ProsesEditKriteria', function(e) {
+    e.preventDefault();
+    $('#NotifikasiEditKriteria').html('<span class="text-info">Sedang mengubah data...</span>');
+    
+    $.ajax({
+        type        : 'POST',
+        url         : '_Page/Kriteria/ProsesEditKriteria.php',
+        data        : new FormData(this),
+        contentType : false,
+        cache       : false,
+        processData : false,
+        success     : function(response){
+            $('#NotifikasiEditKriteria').html(response);
+            
+            // JIKA SUKSES (Diperbaiki agar memunculkan SweetAlert)
+            if(response.includes("Success") || response.includes("Berhasil") || $('#NotifikasiEditKriteriaBerhasil').length > 0){
+                $('#ModalEditKriteria').modal('hide');
+                Swal.fire('Berhasil!', 'Data Kriteria Berhasil Diubah', 'success').then(function(){
+                    location.reload(); 
+                });
+            }
+        }
+    });
+});
+
+
+// ===============================================
+// 4. DELETE KRITERIA
+// ===============================================
 $('#ModalDeleteKriteria').on('show.bs.modal', function (e) {
     var GetData = $(e.relatedTarget).data('id');
     var pecah = GetData.split(",");
     var id_kriteria = pecah[0];
-    var keyword = pecah[1];
-    var batas = pecah[2];
-    var ShortBy = pecah[3];
-    var OrderBy = pecah[4];
-    var page = pecah[5];
-    var posisi = pecah[6];
-    var keyword_by = pecah[7];
+
     $('#FormDeleteKriteria').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormDeleteKriteria.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormDeleteKriteria.php',
         data        : {id_kriteria: id_kriteria},
         success     : function(data){
             $('#FormDeleteKriteria').html(data);
-            //Konfirmasi Hapus Kriteria
-            $('#KonfirmasiHapusKriteria').click(function(){
-                $('#NotifikasiHapusKriteria').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
+            
+            $('#KonfirmasiHapusKriteria').off('click').on('click', function(){
+                $('#NotifikasiHapusKriteria').html('Sedang Menghapus...');
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesHapusKriteria.php',
+                    type        : 'POST',
+                    url         : '_Page/Kriteria/ProsesHapusKriteria.php',
                     data        : {id_kriteria: id_kriteria},
-                    success     : function(data){
-                        $('#NotifikasiHapusKriteria').html(data);
-                        var NotifikasiHapusKriteriaBerhasil=$('#NotifikasiHapusKriteriaBerhasil').html();
-                        if(NotifikasiHapusKriteriaBerhasil=="Success"){
-                            $.ajax({
-                                type 	    : 'POST',
-                                url 	    : '_Page/Kriteria/TabelKriteria.php',
-                                data 	    :  {keyword: keyword, batas: batas, ShortBy: ShortBy, OrderBy: OrderBy, page: page, posisi: posisi, keyword_by: keyword_by},
-                                success     : function(data){
-                                    $('#MenampilkanTabelKriteria').html(data);
-                                    $('#ModalDeleteKriteria').modal('hide');
-                                    swal("Good Job!", "Delete Kriteria Berhasil!", "success");
-                                }
+                    success     : function(response){
+                        if(response.includes("Success") || response.includes("Berhasil")){
+                            $('#ModalDeleteKriteria').modal('hide');
+                            Swal.fire("Berhasil!", "Data Kriteria Dihapus!", "success").then(function(){
+                                location.reload();
                             });
+                        } else {
+                            $('#NotifikasiHapusKriteria').html(response);
                         }
                     }
                 });
@@ -175,111 +172,114 @@ $('#ModalDeleteKriteria').on('show.bs.modal', function (e) {
         }
     });
 });
-//Modal Detail Kriteria
+
+
+// ===============================================
+// 5. DETAIL KRITERIA
+// ===============================================
 $('#ModalDetailKriteria').on('show.bs.modal', function (e) {
     var id_kriteria = $(e.relatedTarget).data('id');
     $('#FormDetailKriteria').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormDetailKriteria.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormDetailKriteria.php',
         data        : {id_kriteria: id_kriteria},
         success     : function(data){
             $('#FormDetailKriteria').html(data);
         }
     });
 });
-//Tambah Alternatif
+
+
+// ===============================================
+// 6. ALTERNATIF KRITERIA (Tambah, Edit, Hapus)
+// ===============================================
+
+// -- Tambah Alternatif --
 $('#ModalTambahAlternatif').on('show.bs.modal', function (e) {
     var id_kriteria = $(e.relatedTarget).data('id');
     $('#FormTambahAlternatif').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormTambahAlternatif.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormTambahAlternatif.php',
         data        : {id_kriteria: id_kriteria},
         success     : function(data){
             $('#FormTambahAlternatif').html(data);
-            //Proses Tambah alternatif
-            $('#ProsesTambahAlternatif').submit(function(){
-                $('#NotifikasiTambahAlternatif').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
-                var form = $('#ProsesTambahAlternatif')[0];
-                var data = new FormData(form);
-                $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesTambahAlternatif.php',
-                    data 	    :  data,
-                    cache       : false,
-                    processData : false,
-                    contentType : false,
-                    enctype     : 'multipart/form-data',
-                    success     : function(data){
-                        $('#NotifikasiTambahAlternatif').html(data);
-                        var NotifikasiTambahAlternatifBerhasil=$('#NotifikasiTambahAlternatifBerhasil').html();
-                        if(NotifikasiTambahAlternatifBerhasil=="Success"){
-                            location.reload();
-                        }
-                    }
-                });
-            });
         }
     });
 });
-//Tambah Alternatif
+$(document).on('submit', '#ProsesTambahAlternatif', function(e) {
+    e.preventDefault();
+    $.ajax({
+        type        : 'POST',
+        url         : '_Page/Kriteria/ProsesTambahAlternatif.php',
+        data        : new FormData(this),
+        contentType : false,
+        cache       : false,
+        processData : false,
+        success     : function(response){
+            if(response.includes("Success")){
+                location.reload();
+            } else {
+                Swal.fire('Gagal Menyimpan', 'Silahkan periksa inputan Anda', 'warning');
+            }
+        }
+    });
+});
+
+// -- Edit Alternatif --
 $('#ModalEditAlternatif').on('show.bs.modal', function (e) {
     var id_alternatif = $(e.relatedTarget).data('id');
     $('#FormEditAlternatif').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormEditAlternatif.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormEditAlternatif.php',
         data        : {id_alternatif: id_alternatif},
         success     : function(data){
             $('#FormEditAlternatif').html(data);
-            //Proses Edit alternatif
-            $('#ProsesEditAlternatif').submit(function(){
-                $('#NotifikasiEditAlternatif').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
-                var form = $('#ProsesEditAlternatif')[0];
-                var data = new FormData(form);
-                $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesEditAlternatif.php',
-                    data 	    :  data,
-                    cache       : false,
-                    processData : false,
-                    contentType : false,
-                    enctype     : 'multipart/form-data',
-                    success     : function(data){
-                        $('#NotifikasiEditAlternatif').html(data);
-                        var NotifikasiEditAlternatifBerhasil=$('#NotifikasiEditAlternatifBerhasil').html();
-                        if(NotifikasiEditAlternatifBerhasil=="Success"){
-                            location.reload();
-                        }
-                    }
-                });
-            });
         }
     });
 });
-//Hapus Alternatif
+$(document).on('submit', '#ProsesEditAlternatif', function(e) {
+    e.preventDefault();
+    $.ajax({
+        type        : 'POST',
+        url         : '_Page/Kriteria/ProsesEditAlternatif.php',
+        data        : new FormData(this),
+        contentType : false,
+        cache       : false,
+        processData : false,
+        success     : function(response){
+            if(response.includes("Success")){
+                location.reload();
+            } else {
+                Swal.fire('Gagal Mengubah', 'Silahkan periksa inputan Anda', 'warning');
+            }
+        }
+    });
+});
+
+// -- Hapus Alternatif --
 $('#ModalHapusAlternatif').on('show.bs.modal', function (e) {
     var id_alternatif = $(e.relatedTarget).data('id');
     $('#FormHapusAlternatif').html("Loading...");
     $.ajax({
-        type 	    : 'POST',
-        url 	    : '_Page/Kriteria/FormHapusAlternatif.php',
+        type        : 'POST',
+        url         : '_Page/Kriteria/FormHapusAlternatif.php',
         data        : {id_alternatif: id_alternatif},
         success     : function(data){
             $('#FormHapusAlternatif').html(data);
-            //Konfirmasi Hapus Kriteria
-            $('#KonfirmasiHapusAlternatif').click(function(){
-                $('#NotifikasiHapusAlternatif').html('<div class="spinner-border text-secondary" role="status"><span class="sr-only"></span></div>');
+            
+            $('#KonfirmasiHapusAlternatif').off('click').on('click', function(){
                 $.ajax({
-                    type 	    : 'POST',
-                    url 	    : '_Page/Kriteria/ProsesHapusAlternatif.php',
+                    type        : 'POST',
+                    url         : '_Page/Kriteria/ProsesHapusAlternatif.php',
                     data        : {id_alternatif: id_alternatif},
-                    success     : function(data){
-                        $('#NotifikasiHapusAlternatif').html(data);
-                        var NotifikasiHapusAlternatifBerhasil=$('#NotifikasiHapusAlternatifBerhasil').html();
-                        if(NotifikasiHapusAlternatifBerhasil=="Success"){
+                    success     : function(response){
+                        if(response.includes("Success")){
                             location.reload();
+                        } else {
+                            Swal.fire('Gagal Menghapus', 'Terjadi Kesalahan', 'error');
                         }
                     }
                 });

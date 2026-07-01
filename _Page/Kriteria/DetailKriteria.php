@@ -26,7 +26,11 @@
         $kode_kriteria= $DataKriteria['kode_kriteria'];
         $kriteria = $DataKriteria['kriteria'];
         $atribut= $DataKriteria['atribut'];
-        $bobot= $DataKriteria['bobot'];
+        
+        // [REVISI] Memanggil kolom bobot yang baru (ANP dan SWARA)
+        $bobot_anp = isset($DataKriteria['bobot_anp']) ? $DataKriteria['bobot_anp'] : 0;
+        $bobot_swara = isset($DataKriteria['bobot_swara']) ? $DataKriteria['bobot_swara'] : (isset($DataKriteria['bobot_swara']) ? $DataKriteria['bobot_swara'] : 0);
+        
         //Hitung jumlah alternatif
         $JumlahAlternatif = mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM alternatif WHERE id_kriteria='$id_kriteria'"));
 ?>
@@ -81,11 +85,20 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <small><dt>Bobot</dt></small>
+                                            <small><dt>Bobot ANP</dt></small>
                                         </td>
                                         <td><b>:</b></td>
                                         <td>
-                                            <small><?php echo $bobot; ?></small>
+                                            <small><?php echo $bobot_anp; ?></small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <small><dt>Bobot SWARA</dt></small>
+                                        </td>
+                                        <td><b>:</b></td>
+                                        <td>
+                                            <small><?php echo $bobot_swara; ?></small>
                                         </td>
                                     </tr>
                                     <tr>

@@ -19,7 +19,10 @@
         $kode_kriteria= $DataKriteria['kode_kriteria'];
         $kriteria = $DataKriteria['kriteria'];
         $atribut= $DataKriteria['atribut'];
-        $bobot= $DataKriteria['bobot'];
+        
+        // [REVISI] Menghindari error Undefined array key "bobot"
+        $bobot_anp = isset($DataKriteria['bobot_anp']) ? $DataKriteria['bobot_anp'] : 0;
+        $bobot_topsis = isset($DataKriteria['bobot_topsis']) ? $DataKriteria['bobot_topsis'] : (isset($DataKriteria['bobot_swara']) ? $DataKriteria['bobot_swara'] : 0);
 ?>
     <input type="hidden" name="id_kriteria" id="id_kriteria" value="<?php echo "$id_kriteria"; ?>">
     <div class="row">
@@ -36,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 mt-3" id="NotifikasiTambahAlternatif">
-            <small class="text-primary">Pastkan data yang anda input sudah benar</small>
+            <small class="text-primary">Pastikan data yang anda input sudah benar</small>
         </div>
     </div>
 <?php } ?>

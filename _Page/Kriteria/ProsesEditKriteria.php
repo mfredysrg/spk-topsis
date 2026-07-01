@@ -1,59 +1,60 @@
 <?php
-    //Koneksi
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
-    //Time Zone
     date_default_timezone_set('Asia/Jakarta');
-    //Time Now Tmp
     $now=date('Y-m-d H:i:s');
+    
     if(empty($_POST['id_kriteria'])){
-        echo '<small class="text-danger">ID Kriteria tidak boleh kosong</small>';
+        echo '<span class="text-danger">ID Kriteria tidak boleh kosong</span>';
     }else{
-        //Validasi kode_kriteria tidak boleh kosong
         if(empty($_POST['kode_kriteria'])){
-            echo '<small class="text-danger">Kode Kriteria tidak boleh kosong</small>';
+            echo '<span class="text-danger">Kode Kriteria tidak boleh kosong</span>';
         }else{
-            //Validasi kriteria tidak boleh kosong
             if(empty($_POST['kriteria'])){
-                echo '<small class="text-danger">Kriteria tidak boleh kosong</small>';
+                echo '<span class="text-danger">Kriteria tidak boleh kosong</span>';
             }else{
-                //Validasi atribut tidak boleh kosong
                 if(empty($_POST['atribut'])){
-                    echo '<small class="text-danger">Atribut tidak boleh kosong</small>';
+                    echo '<span class="text-danger">Atribut tidak boleh kosong</span>';
                 }else{
-                    //Validasi bobot tidak boleh kosong
-                    if(empty($_POST['bobot'])){
-                        echo '<small class="text-danger">Bobot tidak boleh kosong</small>';
+                    if($_POST['bobot_anp'] == ""){
+                        echo '<span class="text-danger">Bobot ANP tidak boleh kosong</span>';
                     }else{
-                        //Variabel
-                        $id_kriteria=$_POST['id_kriteria'];
-                        $kode_kriteria=$_POST['kode_kriteria'];
-                        $kriteria=$_POST['kriteria'];
-                        $atribut=$_POST['atribut'];
-                        $bobot=$_POST['bobot'];
-                        //Buka kriteria lama
-                        $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
-                        $DataKriteria = mysqli_fetch_array($QryKriteria);
-                        $kode_kriteria_lama= $DataKriteria['kode_kriteria'];
-                        if($kode_kriteria_lama==$kode_kriteria){
-                            $ValidasiDuplikat=0;
+                        if($_POST['bobot_swara'] == ""){
+                            echo '<span class="text-danger">Bobot SWARA tidak boleh kosong</span>';
                         }else{
-                            $ValidasiDuplikat=mysqli_num_rows(mysqli_query($Conn, "SELECT*FROM kriteria WHERE kode_kriteria='$kode_kriteria'"));
-                        }
-                        
-                        if(!empty($ValidasiDuplikat)){
-                            echo '<small class="text-danger">Kode Kriteria tersebut sudah terdaftar</small>';
-                        }else{   
-                            $UpdateKriteria = mysqli_query($Conn,"UPDATE kriteria SET 
-                                kode_kriteria='$kode_kriteria',
-                                kriteria='$kriteria',
-                                atribut='$atribut',
-                                bobot='$bobot'
-                            WHERE id_kriteria='$id_kriteria'") or die(mysqli_error($Conn)); 
-                            if($UpdateKriteria){
-                                echo '<small class="text-success" id="NotifikasiEditKriteriaBerhasil">Success</small>';
+                            $id_kriteria=$_POST['id_kriteria'];
+                            $kode_kriteria=$_POST['kode_kriteria'];
+                            $kriteria=$_POST['kriteria'];
+                            $atribut=$_POST['atribut'];
+                            $bobot_anp=$_POST['bobot_anp'];
+                            $bobot_swara=$_POST['bobot_swara'];
+                            
+                            $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
+                            $DataKriteria = mysqli_fetch_array($QryKriteria);
+                            $kode_kriteria_lama= $DataKriteria['kode_kriteria'];
+                            
+                            if($kode_kriteria_lama==$kode_kriteria){
+                                $ValidasiDuplikat=0;
                             }else{
-                                echo '<small class="text-danger">Terjadi kesalahan pada saat menyimpan data</small>';
+                                $ValidasiDuplikat=mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM kriteria WHERE kode_kriteria='$kode_kriteria'"));
+                            }
+                            
+                            if(!empty($ValidasiDuplikat)){
+                                echo '<span class="text-danger">Kode Kriteria tersebut sudah terdaftar</span>';
+                            }else{   
+                                $UpdateKriteria = mysqli_query($Conn,"UPDATE kriteria SET 
+                                    kode_kriteria='$kode_kriteria',
+                                    kriteria='$kriteria',
+                                    atribut='$atribut',
+                                    bobot_anp='$bobot_anp',
+                                    bobot_swara='$bobot_swara'
+                                WHERE id_kriteria='$id_kriteria'") or die(mysqli_error($Conn)); 
+                                
+                                if($UpdateKriteria){
+                                    echo '<span class="text-success" id="NotifikasiEditKriteriaBerhasil">Success</span>';
+                                }else{
+                                    echo '<span class="text-danger">Gagal menyimpan ke database: '.mysqli_error($Conn).'</span>';
+                                }
                             }
                         }
                     }

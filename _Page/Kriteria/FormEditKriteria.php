@@ -3,6 +3,7 @@
     date_default_timezone_set('Asia/Jakarta');
     include "../../_Config/Connection.php";
     include "../../_Config/Session.php";
+    
     //Tangkap id_kriteria
     if(empty($_POST['id_kriteria'])){
         echo '  <div class="row">';
@@ -19,7 +20,10 @@
         $kode_kriteria= $DataKriteria['kode_kriteria'];
         $kriteria = $DataKriteria['kriteria'];
         $atribut= $DataKriteria['atribut'];
-        $bobot= $DataKriteria['bobot'];
+        
+        // Sesuaikan dengan nama kolom baru di database
+        $bobot_anp= $DataKriteria['bobot_anp'];
+        $bobot_swara= $DataKriteria['bobot_swara'];
 ?>
     <input type="hidden" name="id_kriteria" id="id_kriteria" value="<?php echo "$id_kriteria"; ?>">
     <div class="row">
@@ -35,7 +39,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 mt-3">
+        <div class="col-md-12 mt-3">
             <label for="atribut">Atribut</label>
             <select name="atribut" id="atribut" class="form-control">
                 <option <?php if($atribut==""){echo "selected";} ?> value="">Pilih..</option>
@@ -43,14 +47,20 @@
                 <option <?php if($atribut=="Cost"){echo "selected";} ?> value="Cost">Cost</option>
             </select>
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-6 mt-3">
-            <label for="bobot">Bobot</label>
-            <input type="number" min="0" name="bobot" id="bobot" class="form-control" value="<?php echo "$bobot"; ?>">
+            <label for="bobot_anp">Bobot ANP</label>
+            <input type="text" step="any" min="0" name="bobot_anp" id="bobot_anp" class="form-control" value="<?php echo "$bobot_anp"; ?>">
+        </div>
+        <div class="col-md-6 mt-3">
+            <label for="bobot_swara">Bobot SWARA</label>
+            <input type="text" step="any" min="0" name="bobot_swara" id="bobot_swara" class="form-control" value="<?php echo "$bobot_swara"; ?>">
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 mt-3" id="NotifikasiEditKriteria">
-            <small class="text-primary">Pastkan data yang anda input sudah benar</small>
+            <small class="text-primary">Pastikan data yang anda input sudah benar</small>
         </div>
     </div>
 <?php } ?>

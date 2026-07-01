@@ -105,8 +105,12 @@
                                                 $id_kriteria= $data['id_kriteria'];
                                                 $kode_kriteria= $data['kode_kriteria'];
                                                 $kriteria= $data['kriteria'];
-                                                $bobot= $data['bobot'];
-                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
+                                                
+                                                // [REVISI] Menghindari error dengan fallback ke bobot_anp / bobot_topsis
+                                                $bobot_anp = isset($data['bobot_anp']) ? $data['bobot_anp'] : 0;
+                                                $bobot_topsis = isset($data['bobot_topsis']) ? $data['bobot_topsis'] : (isset($data['bobot_swara']) ? $data['bobot_swara'] : 0);
+                                                
+                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | TOPSIS: '.$bobot_topsis.')</small></th>';
                                             }
                                         }else{
                                             //Arraykan kriteria
@@ -116,11 +120,14 @@
                                                 //Buka detail kriteria
                                                 $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataKriteria = mysqli_fetch_array($QryKriteria);
-                                                $kode_kriteria= $DataKriteria['kode_kriteria'];
-                                                $kriteria = $DataKriteria['kriteria'];
-                                                $atribut= $DataKriteria['atribut'];
-                                                $bobot= $DataKriteria['bobot'];
-                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br>('.$bobot.')</th>';
+                                                
+                                                $kode_kriteria= isset($DataKriteria['kode_kriteria']) ? $DataKriteria['kode_kriteria'] : '-';
+                                                
+                                                // [REVISI] Menghindari error dengan fallback ke bobot_anp / bobot_topsis
+                                                $bobot_anp = isset($DataKriteria['bobot_anp']) ? $DataKriteria['bobot_anp'] : 0;
+                                                $bobot_topsis = isset($DataKriteria['bobot_topsis']) ? $DataKriteria['bobot_topsis'] : (isset($DataKriteria['bobot_swara']) ? $DataKriteria['bobot_swara'] : 0);
+
+                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | TOPSIS: '.$bobot_topsis.')</small></th>';
                                             }
                                         }
                                     ?>
@@ -170,6 +177,7 @@
                                                 //Buka nilai (berdasarkan id_umkm)
                                                 $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_umkm='$id_umkm' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
+                                                
                                                 if(empty($DataNilai['nilai'])){
                                                     $nilai =0;
                                                 }else{

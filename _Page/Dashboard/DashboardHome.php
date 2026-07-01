@@ -1,7 +1,7 @@
 <?php
     $JumlahAkses = mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM akses"));
     
-    // [REVISI] Mengambil dari tabel umkm
+    // Mengambil dari tabel umkm
     $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM umkm"));
     
     $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM kriteria"));
@@ -83,33 +83,32 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Rata-Rata Nilai</h5>
-                            <div id="reportsChart">
-                                </div>
+                            <div id="reportsChart"></div>
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
                                 new ApexCharts(document.querySelector("#reportsChart"), {
                                     series: [{
                                         name: 'Penilaian',
                                         data: [
-                                                    <?php
-                                                        $QryPeriodePenilaian = mysqli_query($Conn, "SELECT * FROM periode_penilaian ORDER BY id_periode_penilaian ASC");
-                                                        while ($DataPeriodePenilaian = mysqli_fetch_array($QryPeriodePenilaian)) {
-                                                            $id_periode_penilaian= $DataPeriodePenilaian['id_periode_penilaian'];
-                                                            $TanggalPenilaian= $DataPeriodePenilaian['tanggal'];
-                                                            
-                                                            $Sum = mysqli_fetch_array(mysqli_query($Conn, "SELECT SUM(nilai) AS jumlah FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-                                                            $JumlahSkorNilai = $Sum['jumlah'];
-                                                            $JumlahPeserta = mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-                                                            
-                                                            if(empty($JumlahPeserta)){
-                                                                $RataRata=0;
-                                                            }else{
-                                                                $RataRata=$JumlahSkorNilai/$JumlahPeserta;
-                                                            }
-                                                            
-                                                            echo ''.$RataRata.', ';
-                                                        }
-                                                    ?>
+                                            <?php
+                                                $QryPeriodePenilaian = mysqli_query($Conn, "SELECT * FROM periode_penilaian ORDER BY id_periode_penilaian ASC");
+                                                while ($DataPeriodePenilaian = mysqli_fetch_array($QryPeriodePenilaian)) {
+                                                    $id_periode_penilaian= $DataPeriodePenilaian['id_periode_penilaian'];
+                                                    $TanggalPenilaian= $DataPeriodePenilaian['tanggal'];
+                                                    
+                                                    $Sum = mysqli_fetch_array(mysqli_query($Conn, "SELECT SUM(nilai) AS jumlah FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+                                                    $JumlahSkorNilai = $Sum['jumlah'];
+                                                    $JumlahPeserta = mysqli_num_rows(mysqli_query($Conn, "SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+                                                    
+                                                    if(empty($JumlahPeserta)){
+                                                        $RataRata=0;
+                                                    }else{
+                                                        $RataRata=$JumlahSkorNilai/$JumlahPeserta;
+                                                    }
+                                                    
+                                                    echo ''.$RataRata.', ';
+                                                }
+                                            ?>
                                         ],
                                     }], 
                                     chart: {
@@ -194,12 +193,12 @@
                                         }
                                     }
                                 ?>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-4">
                     <div class="card">
@@ -231,15 +230,15 @@
                                         }
                                     }
                                 ?>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Kriteria</h5>
+                            <h5 class="card-title">Data Kriteria & Bobot</h5>
                             <div class="activity">
                                 <?php
                                     if(empty($JumlahKriteria)){
@@ -247,30 +246,51 @@
                                         echo '  Data Belum Tersedia';
                                         echo '</div>';
                                     }else{
-                                        //Arraykan log Kriteria
                                         $no=1;
-                                        $QryKriteria = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY bobot");
+                                        $QryKriteria = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY id_kriteria ASC");
                                         while ($DataKrieria = mysqli_fetch_array($QryKriteria)) {
-                                            $id_kriteria= $DataKrieria['id_kriteria'];
                                             $kriteria= $DataKrieria['kriteria'];
                                             $atribut= $DataKrieria['atribut'];
-                                            $bobot= $DataKrieria['bobot'];
-                                            echo '<div class="activity-item d-flex">';
-                                            echo '  <div class="activite-label">'.$bobot.'</div>';
-                                            echo '  <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>';
-                                            echo '  <div class="activity-content">';
-                                            echo '      <b>'.$kriteria.'</b><br>'.$atribut.'';
+                                            $bobot_anp= $DataKrieria['bobot_anp'];
+                                            $bobot_swara= $DataKrieria['bobot_swara'];
+                                            
+                                            echo '<div class="activity-item d-flex mb-3">';
+                                            
+                                            // Label Urutan
+                                            echo '  <div class="activite-label fw-bold text-muted" style="min-width: 35px;">#'.$no.'</div>';
+                                            echo '  <i class="bi bi-circle-fill activity-badge text-primary align-self-start"></i>';
+                                            
+                                            // Konten Kriteria
+                                            echo '  <div class="activity-content w-100">';
+                                            echo '      <div class="d-flex justify-content-between align-items-center">';
+                                            echo '          <strong class="text-dark">'.$kriteria.'</strong>';
+                                            
+                                            // Badge Warna untuk Tipe Atribut
+                                            if($atribut == 'Benefit'){
+                                                echo '      <span class="badge bg-success rounded-pill" style="font-size:0.70em;">Benefit</span>';
+                                            } else {
+                                                echo '      <span class="badge bg-danger rounded-pill" style="font-size:0.70em;">Cost</span>';
+                                            }
+                                            
+                                            echo '      </div>';
+                                            
+                                            // Badge Keterangan Bobot ANP dan SWARA
+                                            echo '      <div class="mt-2">';
+                                            echo '          <span class="badge bg-primary mb-1 me-1"><i class="bi bi-bar-chart-steps me-1"></i> ANP: '.$bobot_anp.'</span>';
+                                            echo '          <span class="badge bg-info text-dark mb-1"><i class="bi bi-pie-chart-fill me-1"></i> SWARA: '.$bobot_swara.'</span>';
+                                            echo '      </div>';
+                                            
                                             echo '  </div>';
                                             echo '</div>';
                                             $no++;
                                         }
                                     }
                                 ?>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
@@ -309,7 +329,6 @@
                                         echo '<div class="activity-item d-flex">Belum ada penilaian</div>';
                                     }
                                 ?>
-                                
                             </div>
                         </div>
                     </div>
