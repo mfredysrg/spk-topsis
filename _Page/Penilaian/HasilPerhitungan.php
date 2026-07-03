@@ -539,6 +539,234 @@
             </button> 
         </div>
     </div>
+
+<?php 
+    // =========================================================================
+    // FITUR TAMBAHAN: TABEL PERBANDINGAN NILAI AKHIR (ANP VS SWARA)
+    // =========================================================================
+    
+    $cmp_id_periode = $id_periode_penilaian;
+    $cmp_metode = $metode_pembobotan;
+
+    echo '<div class="card shadow-sm border-0 mb-5">';
+    // PERBAIKAN 1: Tambahkan text-white !important agar warna font di header selalu putih
+    echo '  <div class="card-header bg-dark"><b class="card-title" style="color: #ffffff !important;"><i class="bi bi-bar-chart-line-fill"></i> Kesimpulan & Perbandingan Keputusan Akhir (ANP vs SWARA)</b></div>';
+    echo '  <div class="card-body">';
+    echo '      <div class="table-responsive">';
+    echo '          <table class="table table-bordered table-hover align-middle text-center">';
+    echo '              <thead class="table-light">';
+    echo '                  <tr>';
+    echo '                      <th>Peringkat</th>';
+    echo '                      <th>Nama UMKM</th>';
+    echo '                      <th class="'.($cmp_metode == 'ANP' ? 'bg-primary text-white' : '').'">Nilai Akhir (ANP)</th>';
+    echo '                      <th class="'.($cmp_metode == 'SWARA' || $cmp_metode == 'TOPSIS' ? 'bg-primary text-white' : '').'">Nilai Akhir (SWARA)</th>';
+    echo '                      <th>Status Keputusan</th>';
+    echo '                      <th>Aksi</th>';
+    echo '                  </tr>';
+    echo '              </thead>';
+    echo '              <tbody>';
+
+    // 1. Ambil data kriteria
+    $cmp_kriteria = [];
+    $QryKrit = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY id_kriteria ASC");
+    while ($k = mysqli_fetch_array($QryKrit)) {
+        $cmp_kriteria[] = $k;
+    }
+
+    // 2. Ambil data UMKM
+    $cmp_umkm = [];
+    $QryUmkm = mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$cmp_id_periode' ORDER BY id_umkm ASC");
+    while ($u = mysqli_fetch_array($QryUmkm)) {
+        $id_u = $u['id_umkm'];
+        $detail_u = mysqli_fetch_array(mysqli_query($Conn, "SELECT nama_umkm FROM umkm WHERE id_umkm='$id_u'"));
+        $cmp_umkm[$id_u] = [
+            'id_umkm' => $id_u,
+            'nama_umkm' => isset($detail_u['nama_umkm']) ? $detail_u['nama_umkm'] : 'Unknown',
+            'nilai' => []
+        ];
+    }
+
+    // 3. Matriks (X) dan Pembagi
+    $cmp_pembagi = []; 
+    foreach ($cmp_kriteria as $k) {
+        $id_k = $k['id_kriteria'];
+        $sum_kuadrat = 0;
+        foreach ($cmp_umkm as $id_u => $u) {
+            $QryNilai = mysqli_query($Conn, "SELECT nilai FROM nilai WHERE id_periode_penilaian='$cmp_id_periode' AND id_umkm='$id_u' AND id_kriteria='$id_k'");
+            $DataNilai = mysqli_fetch_array($QryNilai);
+            $x = isset($DataNilai['nilai']) ? (float)$DataNilai['nilai'] : 0;
+            $cmp_umkm[$id_u]['nilai'][$id_k] = $x;
+            $sum_kuadrat += ($x * $x);
+        }
+        $cmp_pembagi[$id_k] = sqrt($sum_kuadrat);
+    }
+
+    // 4. Normalisasi Terbobot Ganda (ANP & SWARA)
+    $y_anp = []; $y_swara = [];
+    $aplus_anp = []; $amin_anp = [];
+    $aplus_swara = []; $amin_swara = [];
+
+    foreach ($cmp_kriteria as $k) {
+        $id_k = $k['id_kriteria'];
+        $sifat = isset($k['atribut']) ? $k['atribut'] : (isset($k['sifat']) ? $k['sifat'] : 'Benefit'); 
+        
+        $bobot_anp = isset($k['bobot_anp']) ? (float)$k['bobot_anp'] : 0;
+        $bobot_swara = isset($k['bobot_topsis']) ? (float)$k['bobot_topsis'] : (isset($k['bobot_swara']) ? (float)$k['bobot_swara'] : 0);
+        
+        $max_anp = -999999; $min_anp = 999999;
+        $max_swara = -999999; $min_swara = 999999;
+
+        foreach ($cmp_umkm as $id_u => $u) {
+            $x = $u['nilai'][$id_k];
+            $norm = ($cmp_pembagi[$id_k] != 0) ? ($x / $cmp_pembagi[$id_k]) : 0;
+            
+            $v_anp = $norm * $bobot_anp;
+            $v_swara = $norm * $bobot_swara;
+            
+            $y_anp[$id_u][$id_k] = $v_anp;
+            $y_swara[$id_u][$id_k] = $v_swara;
+
+            if ($v_anp > $max_anp) $max_anp = $v_anp;
+            if ($v_anp < $min_anp) $min_anp = $v_anp;
+            
+            if ($v_swara > $max_swara) $max_swara = $v_swara;
+            if ($v_swara < $min_swara) $min_swara = $v_swara;
+        }
+
+        if (strtolower($sifat) == 'cost' || strtolower($sifat) == 'biaya') {
+            $aplus_anp[$id_k] = $min_anp; $amin_anp[$id_k] = $max_anp;
+            $aplus_swara[$id_k] = $min_swara; $amin_swara[$id_k] = $max_swara;
+        } else {
+            $aplus_anp[$id_k] = $max_anp; $amin_anp[$id_k] = $min_anp;
+            $aplus_swara[$id_k] = $max_swara; $amin_swara[$id_k] = $min_swara;
+        }
+    }
+
+    // 5. Jarak Solusi Ideal & Preferensi (V)
+    $cmp_hasil = [];
+    foreach ($cmp_umkm as $id_u => $u) {
+        $dplus_anp = 0; $dmin_anp = 0;
+        $dplus_swara = 0; $dmin_swara = 0;
+        
+        foreach ($cmp_kriteria as $k) {
+            $id_k = $k['id_kriteria'];
+            $dplus_anp += pow($y_anp[$id_u][$id_k] - $aplus_anp[$id_k], 2);
+            $dmin_anp += pow($y_anp[$id_u][$id_k] - $amin_anp[$id_k], 2);
+            
+            $dplus_swara += pow($y_swara[$id_u][$id_k] - $aplus_swara[$id_k], 2);
+            $dmin_swara += pow($y_swara[$id_u][$id_k] - $amin_swara[$id_k], 2);
+        }
+        
+        $dplus_anp = sqrt($dplus_anp); $dmin_anp = sqrt($dmin_anp);
+        $dplus_swara = sqrt($dplus_swara); $dmin_swara = sqrt($dmin_swara);
+        
+        $v_anp = ($dmin_anp + $dplus_anp != 0) ? ($dmin_anp / ($dmin_anp + $dplus_anp)) : 0;
+        $v_swara = ($dmin_swara + $dplus_swara != 0) ? ($dmin_swara / ($dmin_swara + $dplus_swara)) : 0;
+        
+        $cmp_hasil[] = [
+            'id_umkm' => $id_u,
+            'nama_umkm' => $u['nama_umkm'],
+            'v_anp' => $v_anp,
+            'v_swara' => $v_swara,
+            'v_selected' => ($cmp_metode == 'ANP') ? $v_anp : $v_swara
+        ];
+    }
+
+    // 6. Urutkan Ranking
+    usort($cmp_hasil, function($a, $b) {
+        return $b['v_selected'] <=> $a['v_selected'];
+    });
+
+    // 7. Render Tabel
+    $no_rank = 1;
+    foreach ($cmp_hasil as $h) {
+        $nilai_selected = $h['v_selected'];
+        
+        // Penentuan Kode Status
+        if ($nilai_selected >= 0.5) {
+            $status_badge = '<span class="badge bg-success">Prioritas Utama</span>';
+            $status_code = 'Lolos';
+        } else {
+            $status_badge = '<span class="badge bg-warning text-dark">Bukan Prioritas</span>';
+            $status_code = 'Gagal';
+        }
+
+        echo '<tr>';
+        echo '  <td><b>'.$no_rank.'</b></td>';
+        echo '  <td class="text-start">'.$h['nama_umkm'].'</td>';
+        
+        $anp_bold = ($cmp_metode == 'ANP') ? 'fw-bold text-primary fs-6' : '';
+        $swara_bold = ($cmp_metode == 'SWARA' || $cmp_metode == 'TOPSIS') ? 'fw-bold text-primary fs-6' : '';
+        
+        echo '  <td class="'.$anp_bold.'">'.number_format($h['v_anp'], 4, '.', '').'</td>';
+        echo '  <td class="'.$swara_bold.'">'.number_format($h['v_swara'], 4, '.', '').'</td>';
+        echo '  <td>'.$status_badge.'</td>';
+        
+        // PERBAIKAN 2: Tombol kini hanya berisi icon tanpa teks, dan mem-passing nilai yang aman tanpa tag HTML
+        echo '  <td>
+                    <button type="button" class="btn btn-sm btn-info btn-rounded" title="Lihat Penjelasan Keputusan" onclick="window.tampilkanDetailHasil(\''.$h['nama_umkm'].'\', \''.$cmp_metode.'\', \''.number_format($nilai_selected, 4, '.', '').'\', \''.$status_code.'\')">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </td>';
+        echo '</tr>';
+        $no_rank++;
+    }
+
+    echo '              </tbody>';
+    echo '          </table>';
+    echo '      </div>';
+    echo '  </div>';
+    echo '</div>';
+?>
+
+<div class="modal fade" id="ModalSelengkapnya" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-info-circle"></i> Detail Keputusan UMKM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="IsiModalSelengkapnya">
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Tutup Keterangan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.tampilkanDetailHasil = function(nama, metode, nilai, statusCode) {
+    var statusTeks = '';
+    
+    if (statusCode === 'Lolos') {
+        statusTeks = 'Berdasarkan ambang batas (Threshold) mutlak <b>0.5000</b>, UMKM ini memiliki nilai akhir yang <b class="text-success">Memenuhi Syarat</b>. Oleh karena itu, UMKM direkomendasikan masuk kategori <br><br><span class="text-success fs-4 fw-bold">PRIORITAS UTAMA</span>.';
+    } else {
+        statusTeks = 'Berdasarkan ambang batas (Threshold) mutlak <b>0.5000</b>, UMKM ini memiliki nilai akhir yang <b class="text-danger">Belum Memenuhi Syarat</b>. Oleh karena itu, UMKM dialokasikan ke kategori <br><br><span class="text-warning text-dark fs-4 fw-bold">BUKAN PRIORITAS</span>.';
+    }
+
+    var htmlContent = `
+        <div class="text-start" style="font-size: 15px; line-height: 1.6;">
+            <p class="mb-2"><b>Nama UMKM:</b> ${nama}</p>
+            <p class="mb-2"><b>Metode Bobot Acuan:</b> ${metode}</p>
+            <p class="mb-3"><b>Nilai Preferensi Akhir (V):</b> <span class="text-primary fs-3 fw-bold">${nilai}</span></p>
+            <hr>
+            <p class="mb-2 text-decoration-underline"><b>Keterangan Ambang Batas (Threshold):</b></p>
+            <p class="text-muted" style="text-align: justify;">
+                Sistem pendukung keputusan ini menetapkan ambang batas mutlak bernilai <b>0.5000</b>. 
+                UMKM yang berhasil memperoleh nilai akhir (V) &ge; 0.5000 akan ditetapkan sebagai Prioritas Utama untuk menerima bantuan.
+            </p>
+            <div class="alert alert-secondary border-0 mt-3 p-3 text-center shadow-sm">
+                ${statusTeks}
+            </div>
+        </div>
+    `;
+    
+    $('#IsiModalSelengkapnya').html(htmlContent);
+    $('#ModalSelengkapnya').modal('show');
+}
+</script>
+
 <?php 
     }else{
         echo '<div class="alert alert-danger">Mohon maaf, ID Periode Penilaian tidak ditemukan.</div>';
