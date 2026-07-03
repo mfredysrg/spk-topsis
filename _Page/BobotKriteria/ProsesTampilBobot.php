@@ -20,39 +20,38 @@ while($col = mysqli_fetch_assoc($queryKolom)){
     $kolom_db[] = $col['Field'];
 }
 
-// DETEKSI KOLOM NAMA KRITERIA
+// ---------------------------------------------------------
+// FITUR PINTAR 1: DETEKSI OTOMATIS KOLOM "NAMA KRITERIA"
+// ---------------------------------------------------------
 $kolom_nama = '';
 foreach($kolom_db as $k) {
     $k_lower = strtolower($k);
+    // Mencari kolom yang mengandung unsur kata nama atau kriteria
     if(in_array($k_lower, ['nama_kriteria', 'nama', 'kriteria', 'name', 'keterangan'])) {
         $kolom_nama = $k; 
         break;
     }
 }
+// Jika masih tidak ketemu nama yang pas, sistem otomatis mengambil kolom urutan ke-2 (biasanya ini pasti nama kriteria)
 if($kolom_nama == '' && count($kolom_db) > 1) {
     $kolom_nama = $kolom_db[1];
 }
 
-// DETEKSI KOLOM ANP
+// ---------------------------------------------------------
+// FITUR PINTAR 2: DETEKSI OTOMATIS KOLOM "BOBOT/NILAI"
+// ---------------------------------------------------------
+// Kita prioritaskan kolom 'bobot' biasa karena form pakar biasanya update ke kolom ini
 $kolom_anp = 'bobot'; 
 if(!in_array('bobot', $kolom_db)) {
     $kolom_anp = in_array('bobot_anp', $kolom_db) ? 'bobot_anp' : (in_array('nilai', $kolom_db) ? 'nilai' : $kolom_db[2]);
 }
 
-// DETEKSI KOLOM SWARA
 $kolom_swara = 'bobot';
-if(in_array('bobot_swara', $kolom_db)) {
-    $kolom_swara = 'bobot_swara';
-} else if(in_array('bobot', $kolom_db)){
-    $kolom_swara = 'bobot';
-} else {
-    $kolom_swara = $kolom_anp;
+if(!in_array('bobot', $kolom_db)) {
+    $kolom_swara = in_array('bobot_swara', $kolom_db) ? 'bobot_swara' : $kolom_anp;
 }
 
-// DETEKSI KOLOM SJ, KJ, QJ (Jika Pimpinan menyimpannya juga ke database)
-$kolom_sj = in_array('nilai_sj', $kolom_db) ? 'nilai_sj' : (in_array('sj', $kolom_db) ? 'sj' : 'nilai_sj');
-$kolom_kj = in_array('nilai_kj', $kolom_db) ? 'nilai_kj' : (in_array('kj', $kolom_db) ? 'kj' : 'nilai_kj');
-$kolom_qj = in_array('nilai_qj', $kolom_db) ? 'nilai_qj' : (in_array('qj', $kolom_db) ? 'qj' : 'nilai_qj');
+$kolom_sj = in_array('nilai_sj', $kolom_db) ? 'nilai_sj' : $kolom_swara;
 
 $kriteria = [];
 $queryKriteria = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY id_kriteria ASC");
@@ -62,6 +61,7 @@ if(!$queryKriteria) {
     exit;
 }
 
+// Gunakan fetch_assoc agar key pasti terbaca string
 while($row = mysqli_fetch_assoc($queryKriteria)){
     $kriteria[] = $row;
 }
@@ -74,6 +74,12 @@ if($jumlah_kriteria == 0){
 
 if ($metode == "ANP") {
     echo '<h5 class="mt-4 mb-3 fw-bold text-primary">1. Matriks Perbandingan Berpasangan (ANP)</h5>';
+    
+    // Tampilkan pesan biru agar Anda tahu persis sistem sedang membaca kolom apa
+    echo '<div class="alert alert-info py-2 fs-6 mb-3">
+            <i class="bi bi-info-circle"></i> <b>Info Debug:</b> Menampilkan nama dari kolom <code>'.$kolom_nama.'</code> dan mengambil nilai pakar dari kolom <code>'.$kolom_anp.'</code>.
+          </div>';
+    
     echo '<div class="table-responsive">';
     echo '<table class="table table-bordered table-hover text-center align-middle">';
     echo '<thead class="table-light"><tr><th>Kriteria</th>';
@@ -87,6 +93,7 @@ if ($metode == "ANP") {
     
     foreach($kriteria as $i => $k1){
         echo '<tr><th class="text-start">'.$k1[$kolom_nama].'</th>';
+        
         $nilai1 = isset($k1[$kolom_anp]) ? (float)$k1[$kolom_anp] : 1;
         if($nilai1 == 0) $nilai1 = 1; 
         
@@ -102,14 +109,16 @@ if ($metode == "ANP") {
             
             $matriks[$i][$j] = $nilai_matriks;
             $total_kolom[$j] += $nilai_matriks;
-            echo '<td>'.round($nilai_matriks, 3).'</td>';
+            
+            // PERBAIKAN: Gunakan number_format agar tampil pecahan persis 4 digit di belakang koma
+            echo '<td>'.number_format($nilai_matriks, 4, '.', '').'</td>';
         }
         echo '</tr>';
     }
     
     echo '<tr class="table-secondary"><th class="text-start">Jumlah Kolom</th>';
     foreach($total_kolom as $total){
-        echo '<th>'.round($total, 3).'</th>';
+        echo '<th>'.number_format($total, 4, '.', '').'</th>';
     }
     echo '</tr></tbody></table></div>';
 
@@ -120,7 +129,7 @@ if ($metode == "ANP") {
     foreach($kriteria as $k){
         echo '<th>'.$k[$kolom_nama].'</th>';
     }
-    echo '<th>Jumlah Baris</th><th class="bg-primary text-white">Bobot Kriteria (Sesuai Pimpinan)</th></tr></thead><tbody>';
+    echo '<th>Jumlah Baris</th><th class="bg-primary text-white">Bobot Kriteria</th></tr></thead><tbody>';
     
     foreach($kriteria as $i => $k1){
         echo '<tr><th class="text-start">'.$k1[$kolom_nama].'</th>';
@@ -129,22 +138,25 @@ if ($metode == "ANP") {
         foreach($kriteria as $j => $k2){
             $normalisasi = ($total_kolom[$j] != 0) ? ($matriks[$i][$j] / $total_kolom[$j]) : 0;
             $jumlah_baris += $normalisasi;
-            echo '<td>'.round($normalisasi, 3).'</td>';
+            
+            // PERBAIKAN format angka
+            echo '<td>'.number_format($normalisasi, 4, '.', '').'</td>';
         }
+        $bobot_akhir = ($jumlah_kriteria != 0) ? ($jumlah_baris / $jumlah_kriteria) : 0;
         
-        // Murni ditarik dari database agar sama persis dengan tabel Kriteria Kadiv
-        $bobot_akhir_db = isset($k1[$kolom_anp]) ? (float)$k1[$kolom_anp] : 0;
-        
-        echo '<td class="fw-bold">'.round($jumlah_baris, 3).'</td>';
-        echo '<td class="fw-bold text-primary">'.round($bobot_akhir_db, 3).'</td>';
+        // PERBAIKAN format angka
+        echo '<td class="fw-bold">'.number_format($jumlah_baris, 4, '.', '').'</td>';
+        echo '<td class="fw-bold text-primary">'.number_format($bobot_akhir, 4, '.', '').'</td>';
         echo '</tr>';
     }
     echo '</tbody></table></div>';
     
 } else if ($metode == "SWARA") {
     echo '<h5 class="mt-4 mb-3 fw-bold text-primary">Langkah Perhitungan Metode SWARA</h5>';
-    echo '<div class="alert alert-success py-2 fs-6 mb-3">
-            <i class="bi bi-check-circle"></i> <b>Terkoneksi:</b> Nilai Final Weight ditarik secara <b>Real-Time murni dari database Kadiv (Kolom <code>'.$kolom_swara.'</code>)</b> sehingga dijamin 100% sama persis.
+    
+    // Tampilkan pesan biru
+    echo '<div class="alert alert-info py-2 fs-6 mb-3">
+            <i class="bi bi-info-circle"></i> <b>Info Debug:</b> Menampilkan nama dari kolom <code>'.$kolom_nama.'</code> dan membaca urutan dari kolom <code>'.$kolom_swara.'</code>.
           </div>';
     
     echo '<div class="table-responsive">';
@@ -161,8 +173,6 @@ if ($metode == "ANP") {
           </thead><tbody>';
           
     $kriteria_swara = $kriteria;
-    
-    // Urutkan berdasarkan bobot final terbesar ke terkecil agar peringkat tabelnya sesuai
     usort($kriteria_swara, function($a, $b) use ($kolom_swara) {
         $valA = isset($a[$kolom_swara]) ? (float)$a[$kolom_swara] : 0;
         $valB = isset($b[$kolom_swara]) ? (float)$b[$kolom_swara] : 0;
@@ -172,48 +182,51 @@ if ($metode == "ANP") {
     $peringkat = 1;
     $q_prev = 1;
     $sum_q = 0;
+    $data_swara = [];
     
     foreach($kriteria_swara as $row){
         $nama_kriteria = $row[$kolom_nama];
-        
-        // 1. Tarik nilai Final Weight (wj) MURNI DARI DATABASE (TIDAK DIHITUNG ULANG)
-        $wj = isset($row[$kolom_swara]) ? (float)$row[$kolom_swara] : 0;
-        
-        // 2. Tarik nilai sj dari database
         $sj = isset($row[$kolom_sj]) ? (float)$row[$kolom_sj] : 0.00; 
         
-        // 3. Tarik atau hitung kj dan qj
-        if(isset($row[$kolom_kj]) && $row[$kolom_kj] > 0){
-            $kj = (float)$row[$kolom_kj];
+        if($peringkat == 1) {
+            $sj = 0; 
+            $kj = 1;
+            $qj = 1;
         } else {
-            $kj = ($peringkat == 1) ? 1 : ($sj + 1);
-        }
-        
-        if(isset($row[$kolom_qj]) && $row[$kolom_qj] > 0){
-            $qj = (float)$row[$kolom_qj];
-        } else {
-            $qj = ($peringkat == 1) ? 1 : (($kj != 0) ? ($q_prev / $kj) : 0);
+            $kj = $sj + 1;
+            $qj = ($kj != 0) ? ($q_prev / $kj) : 0;
         }
         
         $q_prev = $qj;
         $sum_q += $qj;
         
-        echo '<tr>
-                <td>'.$peringkat.'</td>
-                <td class="text-start">'.$nama_kriteria.'</td>
-                <td>'.($peringkat == 1 ? '-' : round($sj, 3)).'</td>
-                <td>'.round($kj, 3).'</td>
-                <td>'.round($qj, 3).'</td>
-                <td class="fw-bold text-primary">'.round($wj, 3).'</td>
-              </tr>';
-              
+        $data_swara[] = [
+            'nama' => $nama_kriteria,
+            'sj' => $sj,
+            'kj' => $kj,
+            'qj' => $qj
+        ];
         $peringkat++;
     }
     
+    $no = 1;
+    foreach($data_swara as $ds){
+        $wj = ($sum_q != 0) ? ($ds['qj'] / $sum_q) : 0;
+        
+        // PERBAIKAN: Gunakan number_format untuk semua perhitungan SWARA
+        echo '<tr>
+                <td>'.$no++.'</td>
+                <td class="text-start">'.$ds['nama'].'</td>
+                <td>'.($ds['sj'] == 0 ? '-' : number_format($ds['sj'], 4, '.', '')).'</td>
+                <td>'.number_format($ds['kj'], 4, '.', '').'</td>
+                <td>'.number_format($ds['qj'], 4, '.', '').'</td>
+                <td class="fw-bold text-primary">'.number_format($wj, 4, '.', '').'</td>
+              </tr>';
+    }
     echo '<tr class="table-secondary">
             <td colspan="4" class="text-end fw-bold">Jumlah Total qj :</td>
-            <td class="fw-bold">'.round($sum_q, 3).'</td>
-            <td class="fw-bold text-primary">1.000</td>
+            <td class="fw-bold">'.number_format($sum_q, 4, '.', '').'</td>
+            <td class="fw-bold text-primary">1.0000</td>
           </tr>';
     echo '</tbody></table></div>';
 }
