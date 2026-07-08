@@ -549,7 +549,6 @@
     $cmp_metode = $metode_pembobotan;
 
     echo '<div class="card shadow-sm border-0 mb-5">';
-    // PERBAIKAN 1: Tambahkan text-white !important agar warna font di header selalu putih
     echo '  <div class="card-header bg-dark"><b class="card-title" style="color: #ffffff !important;"><i class="bi bi-bar-chart-line-fill"></i> Kesimpulan & Perbandingan Keputusan Akhir (ANP vs SWARA)</b></div>';
     echo '  <div class="card-body">';
     echo '      <div class="table-responsive">';
@@ -573,7 +572,7 @@
         $cmp_kriteria[] = $k;
     }
 
-    // 2. Ambil data UMKM
+    // 2. Ambil data UMKM (Memastikan semua UMKM diambil dari daftar input tabel Penilaian)
     $cmp_umkm = [];
     $QryUmkm = mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$cmp_id_periode' ORDER BY id_umkm ASC");
     while ($u = mysqli_fetch_array($QryUmkm)) {
@@ -581,12 +580,19 @@
         $detail_u = mysqli_fetch_array(mysqli_query($Conn, "SELECT nama_umkm FROM umkm WHERE id_umkm='$id_u'"));
         $cmp_umkm[$id_u] = [
             'id_umkm' => $id_u,
-            'nama_umkm' => isset($detail_u['nama_umkm']) ? $detail_u['nama_umkm'] : 'Unknown',
+            'nama_umkm' => isset($detail_u['nama_umkm']) ? $detail_u['nama_umkm'] : '<span class="text-danger">UMKM Terhapus</span>',
             'nilai' => []
         ];
     }
+    
+    // Inisialisasi nilai 0 agar tidak terjadi error missing key / undefinied
+    foreach ($cmp_umkm as $id_u => $u) {
+        foreach ($cmp_kriteria as $k) {
+            $cmp_umkm[$id_u]['nilai'][$k['id_kriteria']] = 0;
+        }
+    }
 
-    // 3. Matriks (X) dan Pembagi
+    // 3. Matriks Pembagi (Akar Sum Kuadrat)
     $cmp_pembagi = []; 
     foreach ($cmp_kriteria as $k) {
         $id_k = $k['id_kriteria'];
@@ -594,46 +600,57 @@
         foreach ($cmp_umkm as $id_u => $u) {
             $QryNilai = mysqli_query($Conn, "SELECT nilai FROM nilai WHERE id_periode_penilaian='$cmp_id_periode' AND id_umkm='$id_u' AND id_kriteria='$id_k'");
             $DataNilai = mysqli_fetch_array($QryNilai);
-            $x = isset($DataNilai['nilai']) ? (float)$DataNilai['nilai'] : 0;
-            $cmp_umkm[$id_u]['nilai'][$id_k] = $x;
-            $sum_kuadrat += ($x * $x);
+            if ($DataNilai) {
+                $x = floatval($DataNilai['nilai']);
+                $cmp_umkm[$id_u]['nilai'][$id_k] = $x;
+                $sum_kuadrat += ($x * $x);
+            }
         }
-        $cmp_pembagi[$id_k] = sqrt($sum_kuadrat);
+        $cmp_pembagi[$id_k] = floatval(sqrt($sum_kuadrat));
     }
 
-    // 4. Normalisasi Terbobot Ganda (ANP & SWARA)
+    // 4. Normalisasi Terbobot (Identik Dengan Rumus Pembulatan PHP Asli)
     $y_anp = []; $y_swara = [];
-    $aplus_anp = []; $amin_anp = [];
-    $aplus_swara = []; $amin_swara = [];
-
     foreach ($cmp_kriteria as $k) {
         $id_k = $k['id_kriteria'];
-        $sifat = isset($k['atribut']) ? $k['atribut'] : (isset($k['sifat']) ? $k['sifat'] : 'Benefit'); 
+        $bobot_anp = floatval($k['bobot_anp'] ?? 0);
+        $bobot_swara = floatval($k['bobot_topsis'] ?? ($k['bobot_swara'] ?? 0));
         
-        $bobot_anp = isset($k['bobot_anp']) ? (float)$k['bobot_anp'] : 0;
-        $bobot_swara = isset($k['bobot_topsis']) ? (float)$k['bobot_topsis'] : (isset($k['bobot_swara']) ? (float)$k['bobot_swara'] : 0);
-        
-        $max_anp = -999999; $min_anp = 999999;
-        $max_swara = -999999; $min_swara = 999999;
-
         foreach ($cmp_umkm as $id_u => $u) {
-            $x = $u['nilai'][$id_k];
-            $norm = ($cmp_pembagi[$id_k] != 0) ? ($x / $cmp_pembagi[$id_k]) : 0;
+            $x = $cmp_umkm[$id_u]['nilai'][$id_k];
+            $pembagi = $cmp_pembagi[$id_k];
             
-            $v_anp = $norm * $bobot_anp;
-            $v_swara = $norm * $bobot_swara;
+            $norm = ($pembagi == 0) ? 0 : ($x / $pembagi);
             
-            $y_anp[$id_u][$id_k] = $v_anp;
-            $y_swara[$id_u][$id_k] = $v_swara;
-
-            if ($v_anp > $max_anp) $max_anp = $v_anp;
-            if ($v_anp < $min_anp) $min_anp = $v_anp;
-            
-            if ($v_swara > $max_swara) $max_swara = $v_swara;
-            if ($v_swara < $min_swara) $min_swara = $v_swara;
+            // Kunci Nilai Normalisasi Terbobot agar identik 100% sama dgn tabel Dapur Perhitungan
+            $y_anp[$id_u][$id_k] = round($norm * $bobot_anp, 6);
+            $y_swara[$id_u][$id_k] = round($norm * $bobot_swara, 6);
         }
+    }
 
-        if (strtolower($sifat) == 'cost' || strtolower($sifat) == 'biaya') {
+    // 5. Solusi Ideal Positif & Negatif (A+ dan A-)
+    $aplus_anp = []; $amin_anp = [];
+    $aplus_swara = []; $amin_swara = [];
+    
+    foreach ($cmp_kriteria as $k) {
+        $id_k = $k['id_kriteria'];
+        $atribut = $k['atribut'] ?? ($k['sifat'] ?? 'Benefit');
+        
+        $v_arr_anp = [];
+        $v_arr_swara = [];
+        
+        foreach ($cmp_umkm as $id_u => $u) {
+            if ($y_anp[$id_u][$id_k] > 0) { $v_arr_anp[] = $y_anp[$id_u][$id_k]; }
+            if ($y_swara[$id_u][$id_k] > 0) { $v_arr_swara[] = $y_swara[$id_u][$id_k]; }
+        }
+        
+        $max_anp = !empty($v_arr_anp) ? max($v_arr_anp) : 0;
+        $min_anp = !empty($v_arr_anp) ? min($v_arr_anp) : 0;
+        
+        $max_swara = !empty($v_arr_swara) ? max($v_arr_swara) : 0;
+        $min_swara = !empty($v_arr_swara) ? min($v_arr_swara) : 0;
+
+        if (strtolower($atribut) == 'cost' || strtolower($atribut) == 'biaya') {
             $aplus_anp[$id_k] = $min_anp; $amin_anp[$id_k] = $max_anp;
             $aplus_swara[$id_k] = $min_swara; $amin_swara[$id_k] = $max_swara;
         } else {
@@ -642,7 +659,7 @@
         }
     }
 
-    // 5. Jarak Solusi Ideal & Preferensi (V)
+    // 6. Jarak Solusi Ideal & Preferensi (V)
     $cmp_hasil = [];
     foreach ($cmp_umkm as $id_u => $u) {
         $dplus_anp = 0; $dmin_anp = 0;
@@ -650,39 +667,55 @@
         
         foreach ($cmp_kriteria as $k) {
             $id_k = $k['id_kriteria'];
-            $dplus_anp += pow($y_anp[$id_u][$id_k] - $aplus_anp[$id_k], 2);
-            $dmin_anp += pow($y_anp[$id_u][$id_k] - $amin_anp[$id_k], 2);
             
-            $dplus_swara += pow($y_swara[$id_u][$id_k] - $aplus_swara[$id_k], 2);
-            $dmin_swara += pow($y_swara[$id_u][$id_k] - $amin_swara[$id_k], 2);
+            // ANP
+            $diff_plus_anp = $y_anp[$id_u][$id_k] - $aplus_anp[$id_k];
+            $dplus_anp += ($diff_plus_anp * $diff_plus_anp);
+            $diff_min_anp = $y_anp[$id_u][$id_k] - $amin_anp[$id_k];
+            $dmin_anp += ($diff_min_anp * $diff_min_anp);
+            
+            // SWARA
+            $diff_plus_swara = $y_swara[$id_u][$id_k] - $aplus_swara[$id_k];
+            $dplus_swara += ($diff_plus_swara * $diff_plus_swara);
+            $diff_min_swara = $y_swara[$id_u][$id_k] - $amin_swara[$id_k];
+            $dmin_swara += ($diff_min_swara * $diff_min_swara);
         }
         
-        $dplus_anp = sqrt($dplus_anp); $dmin_anp = sqrt($dmin_anp);
-        $dplus_swara = sqrt($dplus_swara); $dmin_swara = sqrt($dmin_swara);
+        // Kalkulasi Preferensi (V) ANP
+        $akar_dplus_anp = floatval(sqrt($dplus_anp));
+        $akar_dmin_anp = floatval(sqrt($dmin_anp));
+        $akum_anp = floatval($akar_dmin_anp + $akar_dplus_anp);
+        $v_anp = ($akum_anp == 0) ? 0 : floatval($akar_dmin_anp / $akum_anp);
+        $v_anp_final = round($v_anp, 6);
         
-        $v_anp = ($dmin_anp + $dplus_anp != 0) ? ($dmin_anp / ($dmin_anp + $dplus_anp)) : 0;
-        $v_swara = ($dmin_swara + $dplus_swara != 0) ? ($dmin_swara / ($dmin_swara + $dplus_swara)) : 0;
+        // Kalkulasi Preferensi (V) SWARA
+        $akar_dplus_swara = floatval(sqrt($dplus_swara));
+        $akar_dmin_swara = floatval(sqrt($dmin_swara));
+        $akum_swara = floatval($akar_dmin_swara + $akar_dplus_swara);
+        $v_swara = ($akum_swara == 0) ? 0 : floatval($akar_dmin_swara / $akum_swara);
+        $v_swara_final = round($v_swara, 6);
         
+        // Simpan Hasil ke dalam array
         $cmp_hasil[] = [
             'id_umkm' => $id_u,
             'nama_umkm' => $u['nama_umkm'],
-            'v_anp' => $v_anp,
-            'v_swara' => $v_swara,
-            'v_selected' => ($cmp_metode == 'ANP') ? $v_anp : $v_swara
+            'v_anp' => $v_anp_final,
+            'v_swara' => $v_swara_final,
+            'v_selected' => ($cmp_metode == 'ANP') ? $v_anp_final : $v_swara_final
         ];
     }
 
-    // 6. Urutkan Ranking
+    // 7. Pengurutan (Sorting) Kebal Error Untuk Tipe Angka Float
     usort($cmp_hasil, function($a, $b) {
-        return $b['v_selected'] <=> $a['v_selected'];
+        if (abs($a['v_selected'] - $b['v_selected']) < 0.0000001) return 0;
+        return ($a['v_selected'] < $b['v_selected']) ? 1 : -1;
     });
 
-    // 7. Render Tabel
+    // 8. Render Tabel
     $no_rank = 1;
     foreach ($cmp_hasil as $h) {
         $nilai_selected = $h['v_selected'];
         
-        // Penentuan Kode Status
         if ($nilai_selected >= 0.5) {
             $status_badge = '<span class="badge bg-success">Prioritas Utama</span>';
             $status_code = 'Lolos';
@@ -702,7 +735,6 @@
         echo '  <td class="'.$swara_bold.'">'.number_format($h['v_swara'], 4, '.', '').'</td>';
         echo '  <td>'.$status_badge.'</td>';
         
-        // PERBAIKAN 2: Tombol kini hanya berisi icon tanpa teks, dan mem-passing nilai yang aman tanpa tag HTML
         echo '  <td>
                     <button type="button" class="btn btn-sm btn-info btn-rounded" title="Lihat Penjelasan Keputusan" onclick="window.tampilkanDetailHasil(\''.$h['nama_umkm'].'\', \''.$cmp_metode.'\', \''.number_format($nilai_selected, 4, '.', '').'\', \''.$status_code.'\')">
                         <i class="bi bi-search"></i>
