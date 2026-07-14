@@ -7,24 +7,18 @@ if ($akses_pengguna != "Kadiv" && $akses_pengguna != "Pimpinan") {
 }
 
 // ---------------------------------------------------------
-// AUTO-DETECT NAMA KOLOM DATABASE (ANTI ERROR)
+// AUTO-DETECT KOLOM ID DATABASE
 // ---------------------------------------------------------
 $id_col = 'id_kriteria'; 
-$nama_col = 'nama_kriteria';
 $cek_kolom = mysqli_query($Conn, "SELECT * FROM kriteria LIMIT 1");
 
 if ($cek_kolom && mysqli_num_rows($cek_kolom) > 0) {
     $baris_cek = mysqli_fetch_assoc($cek_kolom);
     $semua_kolom = array_keys($baris_cek);
-    
     $id_col = $semua_kolom[0]; 
-    $nama_col = isset($semua_kolom[1]) ? $semua_kolom[1] : $semua_kolom[0];
     
     foreach($semua_kolom as $k) {
-        if (stripos($k, 'nama') !== false) {
-            $nama_col = $k;
-        }
-        if (stripos($k, 'id') !== false && stripos($k, 'kriteria') !== false) {
+        if (strtolower($k) == 'id_kriteria') {
             $id_col = $k;
         }
     }
@@ -63,7 +57,6 @@ if (isset($_POST['hitung_anp'])) {
                 $id2 = $ids[$j];
                 
                 if (isset($anp_post[$id1][$id2])) {
-                    // Nilai desimal dari background otomatis ditangkap di sini
                     $val = (float)$anp_post[$id1][$id2];
                     if ($val == 0) $val = 1; 
                     
@@ -94,7 +87,6 @@ if (isset($_POST['hitung_anp'])) {
         }
         $bobot = $row_sum_norm / ($n > 0 ? $n : 1); 
         
-        // Update ke database
         mysqli_query($Conn, "UPDATE kriteria SET bobot_anp = '$bobot' WHERE $id_col = '$id1'");
     }
     echo '<div class="alert alert-success alert-dismissible fade show m-3" role="alert">Berhasil! Perhitungan Bobot ANP selesai dan otomatis tersimpan.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
@@ -151,14 +143,39 @@ if (isset($_POST['hitung_swara'])) {
     }
 }
 
-// Ambil Data Kriteria dengan Kolom Dinamis
+// ---------------------------------------------------------
+// AMBIL DATA KRITERIA & DETEKSI NAMA KOLOM CERDAS
+// ---------------------------------------------------------
 $kriteriaArr = [];
 $query = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY 1 ASC");
 if ($query) {
     while ($r = mysqli_fetch_assoc($query)) {
+        
+        // Cari Nama Kriteria
+        $nama_tampil = '';
+        if (isset($r['nama_kriteria'])) {
+            $nama_tampil = $r['nama_kriteria'];
+        } elseif (isset($r['kriteria'])) {
+            $nama_tampil = $r['kriteria'];
+        } elseif (isset($r['nama'])) {
+            $nama_tampil = $r['nama'];
+        } else {
+            // Fallback jika nama kolom aneh
+            $semua_kol = array_keys($r);
+            $nama_tampil = isset($semua_kol[2]) ? $r[$semua_kol[2]] : (isset($semua_kol[1]) ? $r[$semua_kol[1]] : 'Kriteria Unknown');
+        }
+
+        // Cari Kode Kriteria (C1, C2) untuk digabungkan
+        $kode = '';
+        if (isset($r['kode_kriteria'])) {
+            $kode = $r['kode_kriteria'] . ' - ';
+        } elseif (isset($r['kode'])) {
+            $kode = $r['kode'] . ' - ';
+        }
+
         $kriteriaArr[] = [
             'id' => $r[$id_col],
-            'nama' => $r[$nama_col]
+            'nama' => $kode . $nama_tampil // Hasil: "C1 - Harga" atau "Harga"
         ];
     }
 }
@@ -190,18 +207,22 @@ $jmlKriteria = count($kriteriaArr);
             <div class="tab-content pt-3">
                 
                 <div class="tab-pane fade show active" id="tab-anp">
-                    <div class="alert alert-info">
-                        <strong>Panduan ANP:</strong> Bandingkan mana kriteria yang lebih penting (Kriteria Kiri atau Kanan) menggunakan skala angka 1 hingga 9.
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title m-0 p-0">Penilaian Matriks ANP</h5>
+                        <button type="button" class="btn btn-outline-info btn-sm rounded-circle" data-bs-toggle="modal" data-bs-target="#ModalPanduanANP" title="Klik untuk melihat panduan">
+                            <i class="bi bi-question-lg fs-5"></i>
+                        </button>
                     </div>
+
                     <?php if($jmlKriteria > 1) { ?>
                     <form method="POST" action="index.php?Page=PerbandinganKriteria">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-primary text-center">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="table-primary text-center align-middle">
                                     <tr>
-                                        <th>Kriteria Kiri</th>
-                                        <th>Tingkat Kepentingan & Pihak yang Lebih Penting</th>
-                                        <th>Kriteria Kanan</th>
+                                        <th style="width: 30%;">Kriteria Kiri</th>
+                                        <th style="width: 40%;">Pilih Tingkat Kepentingan</th>
+                                        <th style="width: 30%;">Kriteria Kanan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -212,74 +233,76 @@ $jmlKriteria = count($kriteriaArr);
                                             $k2 = $kriteriaArr[$j];
                                     ?>
                                     <tr>
-                                        <td class="text-end align-middle fw-bold"><?= htmlspecialchars($k1['nama']) ?></td>
+                                        <td class="text-end align-middle fw-bold text-primary fs-6"><?= htmlspecialchars($k1['nama']) ?></td>
                                         <td>
-                                            <select name="anp[<?= htmlspecialchars($k1['id']) ?>][<?= htmlspecialchars($k2['id']) ?>]" class="form-select text-center fw-bold" required>
-                                                <option value="9">9 - Mutlak Lebih Penting (Kiri)</option>
-                                                <option value="8">8 - Mendekati Mutlak Lebih Penting (Kiri)</option>
-                                                <option value="7">7 - Sangat Jelas Lebih Penting (Kiri)</option>
-                                                <option value="6">6 - Mendekati Sangat Jelas Lebih Penting (Kiri)</option>
-                                                <option value="5">5 - Jelas Lebih Penting (Kiri)</option>
-                                                <option value="4">4 - Mendekati Jelas Lebih Penting (Kiri)</option>
-                                                <option value="3">3 - Sedikit Lebih Penting (Kiri)</option>
-                                                <option value="2">2 - Mendekati Sedikit Lebih Penting (Kiri)</option>
+                                            <select name="anp[<?= htmlspecialchars($k1['id']) ?>][<?= htmlspecialchars($k2['id']) ?>]" class="form-select text-center fw-bold shadow-sm" required>
+                                                <option value="9">9 - Mutlak Lebih Penting (KIRI)</option>
+                                                <option value="8">8 - Mendekati Mutlak Lebih Penting (KIRI)</option>
+                                                <option value="7">7 - Sangat Jelas Lebih Penting (KIRI)</option>
+                                                <option value="6">6 - Mendekati Sangat Jelas Lebih Penting (KIRI)</option>
+                                                <option value="5">5 - Jelas Lebih Penting (KIRI)</option>
+                                                <option value="4">4 - Mendekati Jelas Lebih Penting (KIRI)</option>
+                                                <option value="3">3 - Sedikit Lebih Penting (KIRI)</option>
+                                                <option value="2">2 - Mendekati Sedikit Lebih Penting (KIRI)</option>
                                                 
                                                 <option value="1" selected>1 - Keduanya SAMA PENTING</option>
                                                 
-                                                <option value="0.5">2 - Mendekati Sedikit Lebih Penting (Kanan)</option>
-                                                <option value="0.3333">3 - Sedikit Lebih Penting (Kanan)</option>
-                                                <option value="0.25">4 - Mendekati Jelas Lebih Penting (Kanan)</option>
-                                                <option value="0.2">5 - Jelas Lebih Penting (Kanan)</option>
-                                                <option value="0.1666">6 - Mendekati Sangat Jelas Lebih Penting (Kanan)</option>
-                                                <option value="0.1428">7 - Sangat Jelas Lebih Penting (Kanan)</option>
-                                                <option value="0.125">8 - Mendekati Mutlak Lebih Penting (Kanan)</option>
-                                                <option value="0.1111">9 - Mutlak Lebih Penting (Kanan)</option>
+                                                <option value="0.5">2 - Mendekati Sedikit Lebih Penting (KANAN)</option>
+                                                <option value="0.3333">3 - Sedikit Lebih Penting (KANAN)</option>
+                                                <option value="0.25">4 - Mendekati Jelas Lebih Penting (KANAN)</option>
+                                                <option value="0.2">5 - Jelas Lebih Penting (KANAN)</option>
+                                                <option value="0.1666">6 - Mendekati Sangat Jelas Lebih Penting (KANAN)</option>
+                                                <option value="0.1428">7 - Sangat Jelas Lebih Penting (KANAN)</option>
+                                                <option value="0.125">8 - Mendekati Mutlak Lebih Penting (KANAN)</option>
+                                                <option value="0.1111">9 - Mutlak Lebih Penting (KANAN)</option>
                                             </select>
                                         </td>
-                                        <td class="align-middle fw-bold"><?= htmlspecialchars($k2['nama']) ?></td>
+                                        <td class="align-middle fw-bold text-success fs-6"><?= htmlspecialchars($k2['nama']) ?></td>
                                     </tr>
                                     <?php } } ?>
                                 </tbody>
                             </table>
                         </div>
-                        <button type="submit" name="hitung_anp" class="btn btn-primary"><i class="bi bi-calculator"></i> Hitung & Simpan Bobot ANP</button>
+                        <button type="submit" name="hitung_anp" class="btn btn-primary w-100 mt-2"><i class="bi bi-save"></i> Simpan Penilaian ANP</button>
                     </form>
                     <?php } else { echo '<div class="alert alert-warning">Data kriteria belum cukup untuk dibandingkan (Minimal 2 Kriteria). Silakan pastikan data kriteria di database tidak kosong.</div>'; } ?>
                 </div>
 
                 <div class="tab-pane fade" id="tab-swara">
-                    <div class="alert alert-info">
-                        <strong>Panduan SWARA:</strong> <br>
-                        1. Tentukan <b>Peringkat</b> kriteria dari yang paling penting (Peringkat 1) hingga terakhir.<br>
-                        2. Isi <b>Nilai Kepentingan Relatif (Sj)</b>. Untuk Peringkat 1 biarkan 0, selanjutnya isi desimal (contoh: 0.1).
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title m-0 p-0">Penilaian Peringkat SWARA</h5>
+                        <button type="button" class="btn btn-outline-success btn-sm rounded-circle" data-bs-toggle="modal" data-bs-target="#ModalPanduanSWARA" title="Klik untuk melihat panduan">
+                            <i class="bi bi-question-lg fs-5"></i>
+                        </button>
                     </div>
+
                     <?php if($jmlKriteria > 0) { ?>
                     <form method="POST" action="index.php?Page=PerbandinganKriteria">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead class="table-success text-center">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="table-success text-center align-middle">
                                     <tr>
-                                        <th>Nama Kriteria</th>
-                                        <th>Peringkat (1,2,3...)</th>
-                                        <th>Nilai Kepentingan Relatif (Sj)</th>
+                                        <th>Nama Kriteria yang Dinilai</th>
+                                        <th style="width: 25%;">Peringkat Kriteria</th>
+                                        <th style="width: 30%;">Jarak Kepentingan (Sj)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($kriteriaArr as $k) { ?>
                                     <tr>
-                                        <td class="align-middle fw-bold"><?= htmlspecialchars($k['nama']) ?></td>
+                                        <td class="align-middle fw-bold text-dark fs-6"><?= htmlspecialchars($k['nama']) ?></td>
                                         <td>
-                                            <input type="number" name="peringkat[<?= htmlspecialchars($k['id']) ?>]" class="form-control" placeholder="Contoh: 1" required min="1" max="<?= $jmlKriteria ?>">
+                                            <input type="number" name="peringkat[<?= htmlspecialchars($k['id']) ?>]" class="form-control text-center fw-bold" placeholder="Contoh: 1, 2, 3..." required min="1" max="<?= $jmlKriteria ?>">
                                         </td>
                                         <td>
-                                            <input type="number" step="0.01" name="sj[<?= htmlspecialchars($k['id']) ?>]" class="form-control" value="0" required>
+                                            <input type="number" step="0.01" name="sj[<?= htmlspecialchars($k['id']) ?>]" class="form-control text-center" value="0" required>
                                         </td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
                             </table>
                         </div>
-                        <button type="submit" name="hitung_swara" class="btn btn-success"><i class="bi bi-calculator"></i> Hitung & Simpan Bobot SWARA</button>
+                        <button type="submit" name="hitung_swara" class="btn btn-success w-100 mt-2"><i class="bi bi-save"></i> Simpan Penilaian SWARA</button>
                     </form>
                     <?php } else { echo '<div class="alert alert-warning">Data kriteria kosong. Silakan pastikan data kriteria di database tidak kosong.</div>'; } ?>
                 </div>
@@ -288,3 +311,60 @@ $jmlKriteria = count($kriteriaArr);
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="ModalPanduanANP" tabindex="-1" aria-labelledby="PanduanANPLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="PanduanANPLabel"><i class="bi bi-info-circle me-2"></i>Cara Mengisi Penilaian ANP</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <p>Pada metode ANP, Anda diminta untuk membandingkan <strong>dua kriteria secara berhadapan</strong> (Kiri melawan Kanan).</p>
+        <ol>
+            <li class="mb-2">Baca kriteria di sebelah <strong>KIRI</strong> (warna biru) dan kriteria di sebelah <strong>KANAN</strong> (warna hijau).</li>
+            <li class="mb-2">Tentukan mana yang menurut Anda lebih penting untuk diutamakan.</li>
+            <li class="mb-2">Klik kotak pilihan di tengah, lalu pilih skala angkanya:
+                <ul class="mt-1">
+                    <li>Jika sama penting, pilih <b>Angka 1</b>.</li>
+                    <li>Jika sisi KIRI lebih penting, pilih angka yang berlabel <b>(KIRI)</b>. Semakin besar angkanya (hingga 9), berarti semakin mutlak.</li>
+                    <li>Sebaliknya, jika sisi KANAN lebih penting, pilih angka yang berlabel <b>(KANAN)</b>.</li>
+                </ul>
+            </li>
+            <li>Klik tombol <b>Simpan</b> jika semua kriteria sudah dibandingkan.</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Saya Mengerti</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalPanduanSWARA" tabindex="-1" aria-labelledby="PanduanSWARALabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="PanduanSWARALabel"><i class="bi bi-info-circle me-2"></i>Cara Mengisi Penilaian SWARA</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <p>Metode SWARA sangat sederhana. Anda hanya perlu mengurutkan kriteria dari yang paling penting sampai yang paling tidak penting.</p>
+        <ol>
+            <li class="mb-2"><strong>Kolom Peringkat:</strong> Isi dengan angka 1, 2, 3, dan seterusnya.<br>
+            <i>(Angka 1 untuk kriteria yang paling utama, angka 2 untuk juara kedua, dst).</i></li>
+            <li class="mb-2"><strong>Kolom Jarak Kepentingan (Sj):</strong> 
+                <ul class="mt-1">
+                    <li>Untuk kriteria yang mendapat Peringkat 1, <b>biarkan nilainya 0</b>.</li>
+                    <li>Untuk peringkat di bawahnya (Peringkat 2, 3, dst), isi dengan taksiran jarak kepentingan dibanding peringkat di atasnya. Gunakan titik untuk desimal (Contoh: <b>0.1</b> atau <b>0.05</b>).</li>
+                </ul>
+            </li>
+            <li>Pastikan tidak ada angka peringkat yang ganda, lalu klik <b>Simpan</b>.</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Saya Mengerti</button>
+      </div>
+    </div>
+  </div>
+</div>
