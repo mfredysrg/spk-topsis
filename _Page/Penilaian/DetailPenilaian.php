@@ -27,10 +27,10 @@
         $tanggal= $DataPeriodePenilaian['tanggal'];
         $keterangan= $DataPeriodePenilaian['keterangan'];
         $status= $DataPeriodePenilaian['status'];
-        //Jumlah Kriteria
-        $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
-        // [REVISI] Jumlah UMKM (Mengganti Umkm)
-        $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'"));
+        
+        // Jumlah Kriteria & UMKM disesuaikan agar hanya menghitung yang aktif di database master
+        $JumlahKriteria = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT n.id_kriteria FROM nilai n INNER JOIN kriteria k ON n.id_kriteria = k.id_kriteria WHERE n.id_periode_penilaian='$id_periode_penilaian'"));
+        $JumlahUMKM = mysqli_num_rows(mysqli_query($Conn, "SELECT DISTINCT n.id_umkm FROM nilai n INNER JOIN umkm u ON n.id_umkm = u.id_umkm WHERE n.id_periode_penilaian='$id_periode_penilaian'"));
 ?>
     <div class="card">
         <div class="card-header">
@@ -100,34 +100,30 @@
                                     <?php
                                         if($status=="Proses"){
                                              //Arraykan kriteria
-                                            $query = mysqli_query($Conn, "SELECT*FROM kriteria ORDER BY kode_kriteria ASC");
+                                            $query = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY kode_kriteria ASC");
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
                                                 $kode_kriteria= $data['kode_kriteria'];
                                                 $kriteria= $data['kriteria'];
                                                 
-                                                // [REVISI] Menghindari error dengan fallback ke bobot_anp / bobot_topsis
                                                 $bobot_anp = isset($data['bobot_anp']) ? $data['bobot_anp'] : 0;
-                                                $bobot_topsis = isset($data['bobot_topsis']) ? $data['bobot_topsis'] : (isset($data['bobot_swara']) ? $data['bobot_swara'] : 0);
+                                                // REVISI TEKS: Mengubah tulisan keterangan dari TOPSIS menjadi SWARA
+                                                $bobot_swara = isset($data['bobot_swara']) ? $data['bobot_swara'] : (isset($data['bobot_topsis']) ? $data['bobot_topsis'] : 0);
                                                 
-                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | TOPSIS: '.$bobot_topsis.')</small></th>';
+                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | SWARA: '.$bobot_swara.')</small></th>';
                                             }
                                         }else{
-                                            //Arraykan kriteria
-                                            $query = mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY id_kriteria ASC");
+                                            // Menggunakan k.* agar fleksibel dan tidak terjadi error unknown column kriteria hantu
+                                            $query = mysqli_query($Conn, "SELECT DISTINCT n.id_kriteria, k.* FROM nilai n INNER JOIN kriteria k ON n.id_kriteria = k.id_kriteria WHERE n.id_periode_penilaian='$id_periode_penilaian' ORDER BY k.kode_kriteria ASC");
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
-                                                //Buka detail kriteria
-                                                $QryKriteria = mysqli_query($Conn,"SELECT * FROM kriteria WHERE id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
-                                                $DataKriteria = mysqli_fetch_array($QryKriteria);
+                                                $kode_kriteria= $data['kode_kriteria'] ?? '-';
                                                 
-                                                $kode_kriteria= isset($DataKriteria['kode_kriteria']) ? $DataKriteria['kode_kriteria'] : '-';
-                                                
-                                                // [REVISI] Menghindari error dengan fallback ke bobot_anp / bobot_topsis
-                                                $bobot_anp = isset($DataKriteria['bobot_anp']) ? $DataKriteria['bobot_anp'] : 0;
-                                                $bobot_topsis = isset($DataKriteria['bobot_topsis']) ? $DataKriteria['bobot_topsis'] : (isset($DataKriteria['bobot_swara']) ? $DataKriteria['bobot_swara'] : 0);
+                                                $bobot_anp = isset($data['bobot_anp']) ? $data['bobot_anp'] : 0;
+                                                // REVISI TEKS: Mengubah tulisan keterangan dari TOPSIS menjadi SWARA
+                                                $bobot_swara = isset($data['bobot_swara']) ? $data['bobot_swara'] : (isset($data['bobot_topsis']) ? $data['bobot_topsis'] : 0);
 
-                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | TOPSIS: '.$bobot_topsis.')</small></th>';
+                                                echo '<th class="text-center"><b>'.$kode_kriteria.'</b><br><small>(ANP: '.$bobot_anp.' | SWARA: '.$bobot_swara.')</small></th>';
                                             }
                                         }
                                     ?>
@@ -139,21 +135,24 @@
                             <tbody>
                                 <?php
                                     $no = 1;
-                                    //KONDISI PENGATURAN MASING FILTER
                                     if($status=="Proses"){
-                                        // [REVISI] Memanggil dari tabel umkm
-                                        $QryUMKM = mysqli_query($Conn, "SELECT*FROM umkm ORDER BY id_umkm ASC");
+                                        $QryUMKM = mysqli_query($Conn, "SELECT * FROM umkm ORDER BY id_umkm ASC");
                                     }else{
-                                        // [REVISI] Memanggil id_umkm dari tabel nilai
-                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT id_umkm FROM nilai ORDER BY id_umkm ASC");
+                                        // INNER JOIN umkm otomatis menyembunyikan data UMKM yang sudah terhapus
+                                        $QryUMKM = mysqli_query($Conn, "SELECT DISTINCT n.id_umkm, u.nama_umkm, u.nama_pemilik FROM nilai n INNER JOIN umkm u ON n.id_umkm = u.id_umkm WHERE n.id_periode_penilaian='$id_periode_penilaian' ORDER BY n.id_umkm ASC");
                                     }
                                     while ($DataUMKM = mysqli_fetch_array($QryUMKM)) {
                                         $id_umkm= $DataUMKM['id_umkm'];
-                                        //Buka detail UMKM
-                                        $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
-                                        $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
-                                        $nama_umkm = $DataDetailAkses['nama_umkm'];
-                                        $nama_pemilik = $DataDetailAkses['nama_pemilik'];
+                                        
+                                        if($status=="Proses") {
+                                            $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM umkm WHERE id_umkm='$id_umkm'")or die(mysqli_error($Conn));
+                                            $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
+                                            $nama_umkm = $DataDetailAkses['nama_umkm'] ?? 'UMKM Terhapus';
+                                            $nama_pemilik = $DataDetailAkses['nama_pemilik'] ?? '-';
+                                        } else {
+                                            $nama_umkm = $DataUMKM['nama_umkm'];
+                                            $nama_pemilik = $DataUMKM['nama_pemilik'];
+                                        }
                                 ?>
                                     <tr>
                                         <td class="text-center text-xs">
@@ -166,22 +165,22 @@
                                             ?>
                                         </td>
                                         <?php
-                                            //Arraykan kriteria
+                                            // Perulangan kriteria baris data disamakan persis dengan logic header di atas
                                             if($status=="Proses"){
-                                                $query = mysqli_query($Conn, "SELECT*FROM kriteria ORDER BY kode_kriteria ASC");
+                                                $query = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY kode_kriteria ASC");
                                             }else{
-                                                $query = mysqli_query($Conn, "SELECT DISTINCT id_kriteria FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' ORDER BY id_kriteria ASC");
+                                                $query = mysqli_query($Conn, "SELECT DISTINCT n.id_kriteria FROM nilai n INNER JOIN kriteria k ON n.id_kriteria = k.id_kriteria WHERE n.id_periode_penilaian='$id_periode_penilaian' ORDER BY k.kode_kriteria ASC");
                                             }
                                             while ($data = mysqli_fetch_array($query)) {
                                                 $id_kriteria= $data['id_kriteria'];
-                                                //Buka nilai (berdasarkan id_umkm)
+                                                
                                                 $QryNilai = mysqli_query($Conn,"SELECT * FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian' AND id_umkm='$id_umkm' AND id_kriteria='$id_kriteria'")or die(mysqli_error($Conn));
                                                 $DataNilai = mysqli_fetch_array($QryNilai);
                                                 
                                                 if(empty($DataNilai['nilai'])){
-                                                    $nilai =0;
+                                                    $nilai = 0;
                                                 }else{
-                                                    $nilai =$DataNilai['nilai'];
+                                                    $nilai = $DataNilai['nilai'];
                                                 }
                                                 echo '<td class="text-center">'.$nilai.'</td>';
                                             }
