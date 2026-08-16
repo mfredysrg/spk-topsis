@@ -333,3 +333,172 @@
         </div>
     </div>
 </div>
+
+<?php
+// Pastikan session dimulai
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include "../../_Config/Connection.php";
+
+// Tangkap ID Periode Penilaian dari AJAX
+if(empty($_POST['id_periode_penilaian'])){
+    echo '<div class="alert alert-danger text-center">Silakan pilih Periode Penilaian terlebih dahulu pada filter di atas.</div>';
+    exit;
+}
+
+$id_periode_penilaian = $_POST['id_periode_penilaian'];
+
+// =========================================================================================
+// ENGINE PERHITUNGAN TOPSIS PRESISI EXCEL (ANP vs SWARA) UNTUK LAPORAN
+// =========================================================================================
+
+// 1. Ambil Data Kriteria
+$kriteria_arr = [];
+$query_k = mysqli_query($Conn, "SELECT DISTINCT k.*, LENGTH(k.kode_kriteria) AS len_kode FROM nilai n JOIN kriteria k ON n.id_kriteria = k.id_kriteria WHERE n.id_periode_penilaian='$id_periode_penilaian' ORDER BY len_kode ASC, k.kode_kriteria ASC");
+while ($r = mysqli_fetch_array($query_k)) {
+    $kriteria_arr[] = $r;
+}
+
+// 2. Ambil Data UMKM
+$umkm_arr = [];
+$query_u = mysqli_query($Conn, "SELECT DISTINCT u.id_umkm, u.nama_umkm FROM nilai n JOIN umkm u ON n.id_umkm = u.id_umkm WHERE n.id_periode_penilaian='$id_periode_penilaian' ORDER BY u.id_umkm ASC");
+while ($r = mysqli_fetch_array($query_u)) {
+    $umkm_arr[] = $r;
+}
+
+// 3. Ambil Matriks Asli (X)
+$matriks_x = [];
+$query_n = mysqli_query($Conn, "SELECT id_umkm, id_kriteria, nilai FROM nilai WHERE id_periode_penilaian='$id_periode_penilaian'");
+while ($r = mysqli_fetch_array($query_n)) {
+    $matriks_x[$r['id_umkm']][$r['id_kriteria']] = floatval($r['nilai']);
+}
+
+// 4. Hitung Pembagi (SQRT)
+$pembagi = [];
+foreach ($kriteria_arr as $k) {
+    $id_k = $k['id_kriteria'];
+    $sum_sq = 0;
+    foreach ($umkm_arr as $u) {
+        $val = $matriks_x[$u['id_umkm']][$id_k] ?? 0;
+        $sum_sq += pow($val, 2);
+    }
+    $pembagi[$id_k] = sqrt($sum_sq);
+}
+
+// 5. Hitung Normalisasi Terbobot (Y) untuk ANP dan SWARA
+$y_anp = []; $y_swara = [];
+foreach ($kriteria_arr as $k) {
+    $id_k = $k['id_kriteria'];
+    $b_anp = floatval($k['bobot_anp'] ?? 0);
+    $b_swara = floatval($k['bobot_swara'] ?? 0);
+    
+    foreach ($umkm_arr as $u) {
+        $id_u = $u['id_umkm'];
+        $val = $matriks_x[$id_u][$id_k] ?? 0;
+        $r_val = ($pembagi[$id_k] == 0) ? 0 : ($val / $pembagi[$id_k]);
+        
+        $y_anp[$id_u][$id_k] = $r_val * $b_anp;
+        $y_swara[$id_u][$id_k] = $r_val * $b_swara;
+    }
+}
+
+// 6. Solusi Ideal (A+ dan A-)
+$aplus_anp = []; $amin_anp = [];
+$aplus_swara = []; $amin_swara = [];
+foreach ($kriteria_arr as $k) {
+    $id_k = $k['id_kriteria'];
+    $atribut = strtolower(trim($k['atribut'] ?? ($k['sifat'] ?? 'benefit')));
+    
+    $col_anp = []; $col_swara = [];
+    foreach ($umkm_arr as $u) {
+        $col_anp[] = $y_anp[$u['id_umkm']][$id_k];
+        $col_swara[] = $y_swara[$u['id_umkm']][$id_k];
+    }
+    
+    if ($atribut == 'cost' || $atribut == 'biaya') {
+        $aplus_anp[$id_k] = min($col_anp); $amin_anp[$id_k] = max($col_anp);
+        $aplus_swara[$id_k] = min($col_swara); $amin_swara[$id_k] = max($col_swara);
+    } else {
+        $aplus_anp[$id_k] = max($col_anp); $amin_anp[$id_k] = min($col_anp);
+        $aplus_swara[$id_k] = max($col_swara); $amin_swara[$id_k] = min($col_swara);
+    }
+}
+
+// 7. Hitung Jarak & Preferensi Akhir (V)
+$hasil_laporan = [];
+foreach ($umkm_arr as $u) {
+    $id_u = $u['id_umkm'];
+    $dp_anp = 0; $dm_anp = 0;
+    $dp_swara = 0; $dm_swara = 0;
+    
+    foreach ($kriteria_arr as $k) {
+        $id_k = $k['id_kriteria'];
+        $dp_anp += pow(($y_anp[$id_u][$id_k] - $aplus_anp[$id_k]), 2);
+        $dm_anp += pow(($y_anp[$id_u][$id_k] - $amin_anp[$id_k]), 2);
+        
+        $dp_swara += pow(($y_swara[$id_u][$id_k] - $aplus_swara[$id_k]), 2);
+        $dm_swara += pow(($y_swara[$id_u][$id_k] - $amin_swara[$id_k]), 2);
+    }
+    
+    // V ANP
+    $akar_dp_anp = sqrt($dp_anp); $akar_dm_anp = sqrt($dm_anp);
+    $v_anp = (($akar_dp_anp + $akar_dm_anp) == 0) ? 0 : ($akar_dm_anp / ($akar_dp_anp + $akar_dm_anp));
+    
+    // V SWARA
+    $akar_dp_swara = sqrt($dp_swara); $akar_dm_swara = sqrt($dm_swara);
+    $v_swara = (($akar_dp_swara + $akar_dm_swara) == 0) ? 0 : ($akar_dm_swara / ($akar_dp_swara + $akar_dm_swara));
+    
+    // Tentukan acuan ranking berdasarkan metode yang terakhir dipilih user
+    $metode_aktif = $_SESSION['metode_terakhir'] ?? 'ANP';
+    $v_patokan = (strtoupper(trim($metode_aktif)) == 'SWARA') ? $v_swara : $v_anp;
+
+    $hasil_laporan[] = [
+        'nama_umkm' => $u['nama_umkm'],
+        'v_anp' => $v_anp,
+        'v_swara' => $v_swara,
+        'v_patokan' => $v_patokan
+    ];
+}
+
+// 8. Urutkan Ranking (Terbesar ke Terkecil)
+usort($hasil_laporan, function($a, $b) {
+    if (abs($a['v_patokan'] - $b['v_patokan']) < 0.0000001) return 0;
+    return ($a['v_patokan'] < $b['v_patokan']) ? 1 : -1;
+});
+?>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-items-center mb-0" id="DataTabelLaporan">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th class="text-center"><b>Rank</b></th>
+                <th class="text-center"><b>Nama UMKM</b></th>
+                <th class="text-center bg-primary"><b>Nilai Akhir (ANP)</b></th>
+                <th class="text-center bg-info text-dark"><b>Nilai Akhir (SWARA)</b></th>
+                <th class="text-center"><b>Status Keputusan</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $no = 1;
+                foreach ($hasil_laporan as $h) {
+                    if ($h['v_patokan'] >= 0.5) {
+                        $status_badge = '<span class="badge bg-success">Prioritas Utama</span>';
+                    } else {
+                        $status_badge = '<span class="badge bg-warning text-dark">Bukan Prioritas</span>';
+                    }
+            ?>
+                    <tr>
+                        <td class="text-center fw-bold h5 text-success"><?php echo $no++; ?></td>
+                        <td class="text-start fw-bold"><?php echo htmlspecialchars($h['nama_umkm']); ?></td>
+                        <td class="text-center text-primary fw-bold fs-6"><?php echo number_format($h['v_anp'], 4, '.', ''); ?></td>
+                        <td class="text-center text-info fw-bold fs-6"><?php echo number_format($h['v_swara'], 4, '.', ''); ?></td>
+                        <td class="text-center"><?php echo $status_badge; ?></td>
+                    </tr>
+            <?php 
+                } 
+            ?>
+        </tbody>
+    </table>
+</div>

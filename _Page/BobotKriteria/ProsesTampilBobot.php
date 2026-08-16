@@ -50,8 +50,13 @@ if(!in_array('bobot', $kolom_db)) {
 
 $kolom_sj = in_array('nilai_sj', $kolom_db) ? 'nilai_sj' : $kolom_swara;
 
+// =========================================================================================
+// PERBAIKAN UTAMA: URUTKAN KRITERIA MENGGUNAKAN LENGTH() AGAR RAPI C1, C2, C3, dst.
+// =========================================================================================
+$order_sql = in_array('kode_kriteria', $kolom_db) ? "ORDER BY LENGTH(kode_kriteria) ASC, kode_kriteria ASC" : "ORDER BY id_kriteria ASC";
+
 $kriteria = [];
-$queryKriteria = mysqli_query($Conn, "SELECT * FROM kriteria ORDER BY id_kriteria ASC");
+$queryKriteria = mysqli_query($Conn, "SELECT * FROM kriteria $order_sql");
 
 if(!$queryKriteria) {
     echo '<div class="alert alert-danger mt-3">Gagal mengambil data Kriteria dari database.</div>';
@@ -68,6 +73,9 @@ if($jumlah_kriteria == 0){
     exit;
 }
 
+// =========================================================================================
+// PERHITUNGAN METODE ANP
+// =========================================================================================
 if ($metode == "ANP") {
     echo '<h5 class="mt-4 mb-3 fw-bold text-primary">1. Matriks Perbandingan Berpasangan (ANP)</h5>';
     
@@ -79,7 +87,8 @@ if ($metode == "ANP") {
     echo '<table class="table table-bordered table-hover text-center align-middle">';
     echo '<thead class="table-light"><tr><th>Kriteria</th>';
     foreach($kriteria as $k){
-        echo '<th>'.$k[$kolom_nama].'</th>';
+        $label_header = isset($k['kode_kriteria']) ? $k['kode_kriteria'] : $k[$kolom_nama];
+        echo '<th>'.$label_header.'</th>';
     }
     echo '</tr></thead><tbody>';
     
@@ -87,7 +96,8 @@ if ($metode == "ANP") {
     $total_kolom = array_fill(0, $jumlah_kriteria, 0);
     
     foreach($kriteria as $i => $k1){
-        echo '<tr><th class="text-start">'.$k1[$kolom_nama].'</th>';
+        $label_baris = isset($k1['kode_kriteria']) ? "<b>{$k1['kode_kriteria']}</b> - {$k1[$kolom_nama]}" : $k1[$kolom_nama];
+        echo '<tr><td class="text-start">'.$label_baris.'</td>';
         
         $nilai1 = isset($k1[$kolom_anp]) ? (float)$k1[$kolom_anp] : 1;
         if($nilai1 == 0) $nilai1 = 1; 
@@ -110,28 +120,30 @@ if ($metode == "ANP") {
         echo '</tr>';
     }
     
-    echo '<tr class="table-secondary"><th class="text-start">Jumlah Kolom</th>';
+    echo '<tr class="table-secondary"><td class="text-start fw-bold">Jumlah Kolom</td>';
     foreach($total_kolom as $total){
-        echo '<th>'.number_format($total, 4, '.', '').'</th>';
+        echo '<td class="fw-bold">'.number_format($total, 4, '.', '').'</td>';
     }
     echo '</tr></tbody></table></div>';
 
     // ---------------------------------------------------------
-    // 2. MATRIKS NORMALISASI & EIGEN VECTOR
+    // 2. MATRIKS NORMALISASI & EIGEN VECTOR (ANP)
     // ---------------------------------------------------------
     echo '<h5 class="mt-5 mb-3 fw-bold text-primary">2. Matriks Normalisasi & Eigen Vector (Bobot Akhir)</h5>';
     echo '<div class="table-responsive">';
     echo '<table class="table table-bordered table-hover text-center align-middle">';
     echo '<thead class="table-light"><tr><th>Kriteria</th>';
     foreach($kriteria as $k){
-        echo '<th>'.$k[$kolom_nama].'</th>';
+        $label_header = isset($k['kode_kriteria']) ? $k['kode_kriteria'] : $k[$kolom_nama];
+        echo '<th>'.$label_header.'</th>';
     }
     echo '<th>Jumlah Baris</th><th class="bg-primary text-white">Eigen Vector (Bobot)</th></tr></thead><tbody>';
     
-    $eigen_vector_arr = []; // Array untuk menyimpan Eigen Vector untuk Iterasi nanti
+    $eigen_vector_arr = [];
 
     foreach($kriteria as $i => $k1){
-        echo '<tr><th class="text-start">'.$k1[$kolom_nama].'</th>';
+        $label_baris = isset($k1['kode_kriteria']) ? "<b>{$k1['kode_kriteria']}</b> - {$k1[$kolom_nama]}" : $k1[$kolom_nama];
+        echo '<tr><td class="text-start">'.$label_baris.'</td>';
         
         $jumlah_baris = 0;
         foreach($kriteria as $j => $k2){
@@ -141,26 +153,28 @@ if ($metode == "ANP") {
             echo '<td>'.number_format($normalisasi, 4, '.', '').'</td>';
         }
         $bobot_akhir = ($jumlah_kriteria != 0) ? ($jumlah_baris / $jumlah_kriteria) : 0;
-        
-        // Simpan ke array untuk iterasi
         $eigen_vector_arr[$i] = $bobot_akhir;
 
         // =========================================================================
-        // SINKRONISASI DATABASE OTOMATIS UNTUK ANP
+        // SINKRONISASI DATABASE OTOMATIS UNTUK ANP (KUNCI 4 DESIMAL)
         // =========================================================================
         $id_kriteria_anp = $k1['id_kriteria'];
         $bobot_anp_db = number_format($bobot_akhir, 4, '.', ''); 
-        mysqli_query($Conn, "UPDATE kriteria SET bobot_anp = '$bobot_anp_db' WHERE id_kriteria = '$id_kriteria_anp'");
+        
+        $kolom_update_anp = in_array('bobot_anp', $kolom_db) ? 'bobot_anp' : '';
+        if ($kolom_update_anp != '') {
+            mysqli_query($Conn, "UPDATE kriteria SET $kolom_update_anp = '$bobot_anp_db' WHERE id_kriteria = '$id_kriteria_anp'");
+        }
         // =========================================================================
 
         echo '<td class="fw-bold">'.number_format($jumlah_baris, 4, '.', '').'</td>';
-        echo '<td class="fw-bold text-primary">'.number_format($bobot_akhir, 4, '.', '').'</td>';
+        echo '<td class="fw-bold text-primary fs-6">'.number_format($bobot_akhir, 4, '.', '').'</td>';
         echo '</tr>';
     }
     echo '</tbody></table></div>';
 
     // ---------------------------------------------------------
-    // 3. TAHAP ITERASI DAN RASIO KONSISTENSI (PENAMBAHAN BARU)
+    // 3. TAHAP ITERASI DAN RASIO KONSISTENSI (ANP)
     // ---------------------------------------------------------
     echo '<h5 class="mt-5 mb-3 fw-bold text-primary">3. Matriks Perkalian (Iterasi) & Rasio Konsistensi</h5>';
     echo '<div class="table-responsive">';
@@ -178,17 +192,17 @@ if ($metode == "ANP") {
     
     foreach($kriteria as $i => $k1){
         $wsv = 0;
-        // Mengalikan matriks awal dengan eigen vector
         foreach($kriteria as $j => $k2){
             $wsv += $matriks[$i][$j] * $eigen_vector_arr[$j];
         }
         
-        // Membagi WSV dengan Eigen Vector untuk mendapatkan nilai Lambda
         $lambda_i = ($eigen_vector_arr[$i] != 0) ? ($wsv / $eigen_vector_arr[$i]) : 0;
         $lambda_max_total += $lambda_i;
         
+        $label_baris = isset($k1['kode_kriteria']) ? "<b>{$k1['kode_kriteria']}</b> - {$k1[$kolom_nama]}" : $k1[$kolom_nama];
+        
         echo '<tr>';
-        echo '<th class="text-start">'.$k1[$kolom_nama].'</th>';
+        echo '<td class="text-start">'.$label_baris.'</td>';
         echo '<td>'.number_format($wsv, 4, '.', '').'</td>';
         echo '<td>'.number_format($eigen_vector_arr[$i], 4, '.', '').'</td>';
         echo '<td class="fw-bold">'.number_format($lambda_i, 4, '.', '').'</td>';
@@ -199,16 +213,14 @@ if ($metode == "ANP") {
     $lambda_max = ($jumlah_kriteria != 0) ? ($lambda_max_total / $jumlah_kriteria) : 0;
     $ci = ($jumlah_kriteria > 1) ? (($lambda_max - $jumlah_kriteria) / ($jumlah_kriteria - 1)) : 0;
     
-    // Tabel Random Index (RI) standar Saaty
     $ri_array = [1 => 0.00, 2 => 0.00, 3 => 0.58, 4 => 0.90, 5 => 1.12, 6 => 1.24, 7 => 1.32, 8 => 1.41, 9 => 1.45, 10 => 1.49, 11 => 1.51, 12 => 1.53, 13 => 1.56, 14 => 1.57, 15 => 1.59];
-    $ri = isset($ri_array[$jumlah_kriteria]) ? $ri_array[$jumlah_kriteria] : 1.59; // Max 1.59 jika lebih dari 15
+    $ri = isset($ri_array[$jumlah_kriteria]) ? $ri_array[$jumlah_kriteria] : 1.59; 
     
     $cr = ($ri != 0) ? ($ci / $ri) : 0;
     $status_konsistensi = ($cr <= 0.1) ? '<span class="badge bg-success py-2 px-3 ms-2 fs-6">KONSISTEN</span>' : '<span class="badge bg-danger py-2 px-3 ms-2 fs-6">TIDAK KONSISTEN</span>';
 
     echo '</tbody></table></div>';
     
-    // Tampilkan Kesimpulan Konsistensi
     echo '<div class="alert alert-secondary mt-3 shadow-sm border-0">';
     echo '<h6 class="fw-bold mb-3 border-bottom pb-2">Kesimpulan Uji Konsistensi:</h6>';
     echo '<ul class="list-unstyled mb-0 fs-6">';
@@ -220,7 +232,11 @@ if ($metode == "ANP") {
     echo '<p class="mt-3 mb-0 text-muted small"><i>* Syarat mutlak: Nilai CR harus &le; 0.1 (10%) agar penilaian matriks perbandingan pakar dianggap <b>Konsisten</b> dan dapat dipertanggungjawabkan secara ilmiah.</i></p>';
     echo '</div>';
     
-} else if ($metode == "SWARA") {
+} 
+// =========================================================================================
+// PERHITUNGAN METODE SWARA
+// =========================================================================================
+else if ($metode == "SWARA") {
     echo '<h5 class="mt-4 mb-3 fw-bold text-primary">Langkah Perhitungan Metode SWARA</h5>';
     
     echo '<div class="alert alert-info py-2 fs-6 mb-3">
@@ -254,7 +270,7 @@ if ($metode == "ANP") {
     
     foreach($kriteria_swara as $row){
         $id_kriteria = $row['id_kriteria']; 
-        $nama_kriteria = $row[$kolom_nama];
+        $label_baris = isset($row['kode_kriteria']) ? "<b>{$row['kode_kriteria']}</b> - {$row[$kolom_nama]}" : $row[$kolom_nama];
         $sj = isset($row[$kolom_sj]) ? (float)$row[$kolom_sj] : 0.00; 
         
         if($peringkat == 1) {
@@ -271,7 +287,7 @@ if ($metode == "ANP") {
         
         $data_swara[] = [
             'id_kriteria' => $id_kriteria, 
-            'nama' => $nama_kriteria,
+            'nama' => $label_baris,
             'sj' => $sj,
             'kj' => $kj,
             'qj' => $qj
@@ -284,11 +300,16 @@ if ($metode == "ANP") {
         $wj = ($sum_q != 0) ? ($ds['qj'] / $sum_q) : 0;
         
         // =========================================================================
-        // SINKRONISASI DATABASE OTOMATIS UNTUK SWARA (KUNCI 4 DIGIT DESIMAL)
+        // SINKRONISASI DATABASE OTOMATIS UNTUK SWARA (KUNCI 4 DESIMAL)
         // =========================================================================
         $id_kriteria_swara = $ds['id_kriteria'];
         $wj_db = number_format($wj, 4, '.', ''); 
-        mysqli_query($Conn, "UPDATE kriteria SET bobot_swara = '$wj_db' WHERE id_kriteria = '$id_kriteria_swara'");
+        
+        // Anti error jika nama kolom swara / topsis berbeda
+        $kolom_update_swara = in_array('bobot_swara', $kolom_db) ? 'bobot_swara' : (in_array('bobot_topsis', $kolom_db) ? 'bobot_topsis' : '');
+        if ($kolom_update_swara != '') {
+            mysqli_query($Conn, "UPDATE kriteria SET $kolom_update_swara = '$wj_db' WHERE id_kriteria = '$id_kriteria_swara'");
+        }
         // =========================================================================
 
         echo '<tr>
@@ -297,13 +318,13 @@ if ($metode == "ANP") {
                 <td>'.($ds['sj'] == 0 ? '-' : number_format($ds['sj'], 4, '.', '')).'</td>
                 <td>'.number_format($ds['kj'], 4, '.', '').'</td>
                 <td>'.number_format($ds['qj'], 4, '.', '').'</td>
-                <td class="fw-bold text-primary">'.number_format($wj, 4, '.', '').'</td>
+                <td class="fw-bold text-primary fs-6">'.number_format($wj, 4, '.', '').'</td>
               </tr>';
     }
     echo '<tr class="table-secondary">
             <td colspan="4" class="text-end fw-bold">Jumlah Total qj :</td>
             <td class="fw-bold">'.number_format($sum_q, 4, '.', '').'</td>
-            <td class="fw-bold text-primary">1.0000</td>
+            <td class="fw-bold text-primary fs-6">1.0000</td>
           </tr>';
     echo '</tbody></table></div>';
 }
