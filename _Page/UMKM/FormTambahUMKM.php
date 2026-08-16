@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-md-6 mt-3">
         <label for="nip">Lokasi Usaha</label>
-        <input type="text" name="nip" id="nip" class="form-control" placeholder="Contoh: 12345">
+        <input type="text" name="nip" id="nip" class="form-control" maxlength="50"placeholder="Contoh: 12345">
     </div>
     <div class="col-md-6 mt-3">
         <label for="email">Email</label>

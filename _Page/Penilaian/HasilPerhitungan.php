@@ -423,8 +423,9 @@
                                                 $JumlahPreferensiPositif += $NormalisasiSolusiKuadrat;
                                             }
                                             $AkarJumlahPreferensiPositif = floatval(sqrt($JumlahPreferensiPositif));
-                                            $AkarJumlahPreferensiPositifBulat = $AkarJumlahPreferensiPositif; // Dibiarkan presisi tinggi
-                                            echo '<td align="right">'.round($AkarJumlahPreferensiPositifBulat, 6).'</td>';
+                                            // Membatasi desimal untuk menghindari error "Data too long" pada MySQL
+                                            $AkarJumlahPreferensiPositifBulat = round($AkarJumlahPreferensiPositif, 6); 
+                                            echo '<td align="right">'.$AkarJumlahPreferensiPositifBulat.'</td>';
                                         ?>
                                         <?php
                                             $JumlahPreferensiNegatif=0;
@@ -444,8 +445,9 @@
                                                 $JumlahPreferensiNegatif += $NormalisasiSolusiKuadrat;
                                             }
                                             $AkarJumlahPreferensiNegatif = floatval(sqrt($JumlahPreferensiNegatif));
-                                            $AkarJumlahPreferensiNegatifBulat = $AkarJumlahPreferensiNegatif; // Dibiarkan presisi tinggi
-                                            echo '<td align="right">'.round($AkarJumlahPreferensiNegatifBulat, 6).'</td>';
+                                            // Membatasi desimal untuk menghindari error "Data too long" pada MySQL
+                                            $AkarJumlahPreferensiNegatifBulat = round($AkarJumlahPreferensiNegatif, 6); 
+                                            echo '<td align="right">'.$AkarJumlahPreferensiNegatifBulat.'</td>';
 
                                             $AkumulasiPositifNegatif = floatval($AkarJumlahPreferensiNegatif+$AkarJumlahPreferensiPositif);
 
@@ -455,7 +457,8 @@
                                                 $Preferensi = floatval($AkarJumlahPreferensiNegatif / $AkumulasiPositifNegatif);
                                             }
 
-                                            $PreferensiBulat = $Preferensi; // Dibiarkan Presisi Tinggi
+                                            // Membatasi desimal preferensi akhir juga
+                                            $PreferensiBulat = round($Preferensi, 6); 
                                             
                                             $QryPreferensi = mysqli_query($Conn,"SELECT * FROM preferensi WHERE id_periode_penilaian='$id_periode_penilaian' AND id_umkm='$id_umkm'")or die(mysqli_error($Conn));
                                             $DataPreferensi = mysqli_fetch_array($QryPreferensi);
@@ -466,7 +469,7 @@
                                                 $id_preferensi=$DataPreferensi['id_preferensi'];
                                                 mysqli_query($Conn,"UPDATE preferensi SET preferensi='$PreferensiBulat' WHERE id_preferensi='$id_preferensi'") or die(mysqli_error($Conn)); 
                                             }
-                                            echo '<td align="right"><b>'.round($PreferensiBulat, 6).'</b></td>';
+                                            echo '<td align="right"><b>'.$PreferensiBulat.'</b></td>';
                                         ?>
                                     </tr>
                                 <?php $no++; } ?>

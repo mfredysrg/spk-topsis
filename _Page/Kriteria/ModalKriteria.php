@@ -69,6 +69,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalTambahKriteria" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -81,6 +82,8 @@
                     
                 </div>
                 <div class="modal-footer bg-primary">
+                    <div id="NotifikasiTambahKriteria" class="w-100 mb-2 text-center text-light"></div>
+                    
                     <button type="submit" class="btn btn-success btn-rounded">
                         <i class="bi bi-save"></i> Simpan
                     </button>
@@ -92,6 +95,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalEditKriteria" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -104,6 +108,8 @@
                     
                 </div>
                 <div class="modal-footer bg-primary">
+                    <div id="NotifikasiEditKriteria" class="w-100 mb-2 text-center text-light"></div>
+
                     <button type="submit" class="btn btn-success btn-rounded">
                         <i class="bi bi-save"></i> Simpan
                     </button>
@@ -115,6 +121,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalEditPassword" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -138,6 +145,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalDeleteKriteria" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -149,6 +157,8 @@
                 
             </div>
             <div class="modal-footer bg-danger">
+                <div id="NotifikasiHapusKriteria" class="w-100 mb-2 text-center text-light"></div>
+
                 <button type="button" class="btn btn-success btn-rounded" id="KonfirmasiHapusKriteria">
                     <i class="bi bi-check"></i> Ya
                 </button>
@@ -159,6 +169,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalDetailKriteria" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -172,6 +183,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalDukunganKriteria" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -185,6 +197,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalTambahAlternatif" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -208,6 +221,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalHapusAlternatif" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -231,6 +245,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="ModalEditAlternatif" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">

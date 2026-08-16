@@ -133,6 +133,9 @@
                             <th class="text-center"><b>Nama UMKM</b></th>
                             <th class="text-center"><b>Nama Pemilik</b></th>
                             <th class="text-center"><b>Kontak</b></th>
+                            
+                            <th class="text-center"><b>Alamat</b></th>
+                            
                             <th class="text-center"><b>Email Akun</b></th>
                             <th class="text-center"><b>Option</b></th>
                         </tr>
@@ -141,7 +144,8 @@
                         <?php
                             if(empty($jml_data)){
                                 echo '<tr>';
-                                echo '  <td colspan="6" class="text-center text-danger">Tidak Ada Data UMKM Yang Ditampilkan</td>';
+                                // Colspan diubah jadi 7 karena ada tambahan 1 kolom alamat
+                                echo '  <td colspan="7" class="text-center text-danger">Tidak Ada Data UMKM Yang Ditampilkan</td>';
                                 echo '</tr>';
                             }else{
                                 $no = 1 + $posisi;
@@ -167,6 +171,9 @@
                                     $nama_pemilik = $data['nama_pemilik'];
                                     $kontak = $data['kontak'];
                                     
+                                    // TAMBAHAN MENANGKAP VARIABEL ALAMAT
+                                    $alamat = $data['nip']; 
+
                                     // Ambil email dari tabel akses
                                     $QryDetailAkses = mysqli_query($Conn,"SELECT * FROM akses WHERE id_akses='$id_akses'");
                                     $DataDetailAkses = mysqli_fetch_array($QryDetailAkses);
@@ -185,8 +192,13 @@
                                     <?php echo $nama_pemilik;?>
                                 </td>
                                 <td class="text-left" align="left">
-                                    <?php echo $kontak;?>
+                                    <?php echo !empty($kontak) ? $kontak : '-';?>
                                 </td>
+                                
+                                <td class="text-left" align="left">
+                                    <?php echo !empty($alamat) ? $alamat : '-';?>
+                                </td>
+
                                 <td class="text-left" align="left">
                                     <small><?php echo $email_akses; ?></small>
                                 </td>
